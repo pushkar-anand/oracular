@@ -1,0 +1,23 @@
+{
+    "name": "pushkar/easy-php-boilerplate",
+    "description": "Boilerplate for easily starting PHP projects.",
+    "type": "project",
+    "require": {
+        "php": ">=7.3",
+        "pushkar/php-useful": "^2.0",
+        "pushkar/easy-router": "^0.1.2",
+        "twig/twig": "^2.12"
+    },
+    "autoload": {
+        "psr-4": {
+            "EasyPHPApp\\": "src/classes"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pushkar Anand",
+            "email": "anandpushkar088@gmail.com"
+        }
+    ]
+}
