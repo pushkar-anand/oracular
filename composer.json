@@ -6,12 +6,16 @@
         "php": ">=7.3",
         "pushkar/php-useful": "^2.0",
         "pushkar/easy-router": "^0.1.2",
-        "twig/twig": "^2.12"
+      "twig/twig": "^2.12",
+      "monolog/monolog": "^2.0"
     },
     "autoload": {
         "psr-4": {
-            "EasyPHPApp\\": "src/classes"
-        }
+          "OracularApp\\": "src/classes"
+        },
+      "files": [
+        "src/define.php"
+      ]
     },
     "license": "MIT",
     "authors": [
