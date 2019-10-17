@@ -4,3 +4,4 @@ dump.sql
 logs/
 public/images/uploads/
 !public/images/uploads/default-banner.jpg
+src/define.php
