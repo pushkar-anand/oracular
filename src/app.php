@@ -6,7 +6,7 @@ use OracularApp\Logger;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-$logger = new Logger();
+$logger = Logger::getLogger();
 $router = new Route();
 
 $loader = new FilesystemLoader(__DIR__ . '/../views');
@@ -22,5 +22,5 @@ try {
     $router->execute();
 
 } catch (Exception $e) {
-    $logger->pushToCritical($e->getMessage());
+    $logger->pushToCritical($e);
 }

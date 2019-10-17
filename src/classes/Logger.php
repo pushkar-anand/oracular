@@ -14,9 +14,12 @@ class Logger
     private const ERROR_LOG_FILE = __DIR__ . '/../../logs/error.log';
     private const INFO_LOG_FILE = __DIR__ . '/../../logs/info.log';
 
+    private static $logger = null;
+
     private $monoLogger;
 
-    public function __construct()
+
+    private function __construct()
     {
         try {
             $this->monoLogger = new \Monolog\Logger("OracularApp Logger");
@@ -35,6 +38,14 @@ class Logger
             error_log("Error in setting up Monolog: " . $e->getMessage());
             die(1);
         }
+    }
+
+    public static function getLogger(): Logger
+    {
+        if (self::$logger == null) {
+            self::$logger = new Logger();
+        }
+        return self::$logger;
     }
 
     public function pushToInfo(string $msg)
@@ -56,5 +67,6 @@ class Logger
     {
         $this->monoLogger->critical($msg);
     }
+
 
 }
