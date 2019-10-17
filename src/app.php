@@ -5,8 +5,11 @@ use EasyRoute\Route;
 use OracularApp\DataManager;
 use OracularApp\EventClassifier;
 use OracularApp\Logger;
+use OracularApp\Session;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+
+$session = new Session();
 
 date_default_timezone_set('Asia/Kolkata');
 
