@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use EasyRoute\Route;
+use OracularApp\Config;
 use OracularApp\DataManager;
 use OracularApp\EventClassifier;
 use OracularApp\Logger;
@@ -9,16 +10,16 @@ use OracularApp\Session;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
+Config::setDefaults();
+
 $session = new Session();
 
-date_default_timezone_set('Asia/Kolkata');
-
 $logger = Logger::getLogger();
-$router = new Route();
 
 $loader = new FilesystemLoader(__DIR__ . '/../views');
 $twig = new Environment($loader);
 
+$router = new Route();
 
 try {
     $router->addMatch('GET', '/', function () {
