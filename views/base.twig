@@ -12,6 +12,23 @@
 </head>
 <body>
 {% block body %}
+    {% block navbar %}
+        <nav class="purple darken-3">
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo">Oracular</a>
+                <a href="#" data-target="mobile-nav" class="sidenav-trigger">
+                    <i class="material-icons">menu</i>
+                </a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="/login">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul class="sidenav" id="mobile-nav">
+            <li><a href="/login">Login</a></li>
+        </ul>
+    {% endblock %}
 
 {% endblock %}
 
@@ -19,7 +36,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
             integrity="sha256-U/cHDMTIHCeMcvehBv1xQ052bPSbJtbuiw4QA9cTKz0=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.sidenav').sidenav();
+        });
+    </script>
 {% endblock %}
-
 </body>
 </html>

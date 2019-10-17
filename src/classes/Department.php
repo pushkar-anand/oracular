@@ -11,12 +11,14 @@ class Department
     public const DEPARTMENT_TABLE_NAME = 'Department';
     public const DEPT_ID_FIELD = 'dept_id';
     public const DEPT_NAME_FIELD = 'dept_name';
+    public const DEPT_SHORT_FIELD = 'dept_shortcode';
 
     private $oracularDB;
     private $logger;
 
-    private $dept_id;
-    private $dept_name;
+    public $deptID;
+    public $deptName;
+    public $deptShortName;
 
 
     public function __construct($dept_id = null)
@@ -30,39 +32,25 @@ class Department
                 self::DEPT_ID_FIELD,
                 $dept_id
             );
-            $this->dept_id = $result[self::DEPT_ID_FIELD];
-            $this->dept_name = $result[self::DEPT_NAME_FIELD];
+            $this->deptID = $result[self::DEPT_ID_FIELD];
+            $this->deptName = $result[self::DEPT_NAME_FIELD];
+            $this->deptShortName = $result[self::DEPT_SHORT_FIELD];
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDeptId()
-    {
-        return $this->dept_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDeptName()
-    {
-        return $this->dept_name;
-    }
-
-    public function add(string $name)
+    public function add(string $name, string $shortcode)
     {
         try {
             $id = $this->oracularDB->dbConnection->insert(
                 self::DEPARTMENT_TABLE_NAME,
-                array(self::DEPT_NAME_FIELD),
-                's',
-                $name
+                array(self::DEPT_NAME_FIELD, self::DEPT_SHORT_FIELD),
+                'ss',
+                $name, $shortcode
             );
 
-            $this->dept_id = $id;
-            $this->dept_name = $name;
+            $this->deptID = $id;
+            $this->deptName = $name;
+            $this->deptShortName = $shortcode;
 
         } catch (Exception $e) {
             $this->logger->pushToError($e);

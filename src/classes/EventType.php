@@ -13,14 +13,16 @@ class EventType
 
     public const EVENT_TYPE_ID_FIELD = 'event_type_id';
     public const EVENT_TYPE_NAME_FIELD = 'event_type_name';
+    public const EVENT_TYPE_KEY_FIELD = 'event_type_key';
     public const EVENT_TYPE_DESC_FIELD = 'event_type_desc';
 
     private $oracularDB;
     private $logger;
 
-    private $eventTypeID;
-    private $eventTypeName;
-    private $eventTypeDesc;
+    public $eventTypeID;
+    public $eventTypeName;
+    public $eventTypeKey;
+    public $eventTypeDesc;
 
     public function __construct($eventTypeID = null)
     {
@@ -36,49 +38,29 @@ class EventType
             $this->eventTypeID = $result[self::EVENT_TYPE_ID_FIELD];
             $this->eventTypeName = $result[self::EVENT_TYPE_NAME_FIELD];
             $this->eventTypeDesc = $result[self::EVENT_TYPE_DESC_FIELD];
+            $this->eventTypeKey = $result[self::EVENT_TYPE_KEY_FIELD];
         }
     }
 
-    public function add(string $eventTypeName, string $eventTypeDesc)
+    public function add(string $eventTypeName, string $eventTypeKey, string $eventTypeDesc)
     {
         try {
             $id = $this->oracularDB->dbConnection->insert(
                 self::EVENT_TYPE_TABLE_NAME,
-                array(self::EVENT_TYPE_NAME_FIELD, self::EVENT_TYPE_DESC_FIELD),
-                "ss",
-                $eventTypeName, $eventTypeDesc
+                array(self::EVENT_TYPE_NAME_FIELD, self::EVENT_TYPE_KEY_FIELD, self::EVENT_TYPE_DESC_FIELD),
+                "sss",
+                $eventTypeName, $eventTypeKey, $eventTypeDesc
             );
             $this->eventTypeID = $id;
             $this->eventTypeName = $eventTypeName;
             $this->eventTypeDesc = $eventTypeDesc;
+            $this->eventTypeKey = $eventTypeKey;
+
         } catch (Exception $e) {
             $this->logger->pushToError($e);
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEventTypeID()
-    {
-        return $this->eventTypeID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEventTypeName()
-    {
-        return $this->eventTypeName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEventTypeDesc()
-    {
-        return $this->eventTypeDesc;
-    }
 
 
 }

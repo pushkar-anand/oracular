@@ -13,24 +13,31 @@ class Event
     public const EVENT_ID_FIELD = 'event_id';
     public const EVENT_NAME_FIELD = 'event_name';
     public const EVENT_DESC_FIELD = 'event_desc';
+    public const EVENT_IMG_FIELD = 'event_img';
     public const EVENT_TYPE_FIELD = 'event_type';
     public const EVENT_START_TIME_FIELD = 'event_start_time';
     public const EVENT_END_TIME_FIELD = 'event_end_time';
     public const EVENT_DEPT_FIELD = 'dept';
     public const EVENT_VENUE_FIELD = 'venue';
 
-    private $oracularDB;
-    private $logger;
-
     public $eventID;
     public $eventName;
     public $eventDesc;
+    public $eventIMG;
     public $eventType;
     public $eventStartTime;
+    public $eventHumanReadableStartTime;
     public $eventEndTime;
+    public $eventHumanReadableEndTime;
+    public $year;
     public $eventDept;
     public $eventVenue;
 
+    public $eventDeptOBJ;
+    public $eventTypeOBJ;
+
+    private $oracularDB;
+    private $logger;
 
     public function __construct($eventID = null)
     {
@@ -46,11 +53,14 @@ class Event
             $this->eventID = $result[self::EVENT_ID_FIELD];
             $this->eventName = $result[self::EVENT_NAME_FIELD];
             $this->eventDesc = $result[self::EVENT_DESC_FIELD];
+            $this->eventIMG = $result[self::EVENT_IMG_FIELD];
             $this->eventType = $result[self::EVENT_TYPE_FIELD];
             $this->eventStartTime = $result[self::EVENT_START_TIME_FIELD];
             $this->eventEndTime = $result[self::EVENT_END_TIME_FIELD];
             $this->eventDept = $result[self::EVENT_DEPT_FIELD];
             $this->eventVenue = $result[self::EVENT_VENUE_FIELD];
+
+            $this->parseEventData();
         }
     }
 
@@ -61,7 +71,8 @@ class Event
         string $eventStartTime,
         string $eventEndTime,
         string $eventDept,
-        string $eventVenue
+        string $eventVenue,
+        string $eventIMG = 'default-banner.jpg'
     )
     {
         $fields = array(
@@ -71,94 +82,53 @@ class Event
             self::EVENT_START_TIME_FIELD,
             self::EVENT_END_TIME_FIELD,
             self::EVENT_DEPT_FIELD,
-            self::EVENT_VENUE_FIELD
+            self::EVENT_VENUE_FIELD,
+            self::EVENT_IMG_FIELD
         );
 
         try {
             $id = $this->oracularDB->dbConnection->insert(
                 self::EVENTS_TABLE_NAME,
                 $fields,
-                "ssissis",
-                $eventName, $eventDesc, $eventType, $eventStartTime, $eventEndTime, $eventDept, $eventVenue
+                "ssississ",
+                $eventName, $eventDesc, $eventType, $eventStartTime, $eventEndTime, $eventDept, $eventVenue, $eventIMG
             );
 
             $this->eventID = $id;
             $this->eventName = $eventName;
             $this->eventDesc = $eventDesc;
+            $this->eventIMG = $eventIMG;
             $this->eventType = $eventType;
             $this->eventStartTime = $eventStartTime;
             $this->eventEndTime = $eventEndTime;
             $this->eventDept = $eventDept;
             $this->eventVenue = $eventVenue;
 
+            $this->parseEventData();
+
         } catch (Exception $e) {
             $this->logger->pushToError($e);
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEventID()
+    private function parseEventData()
     {
-        return $this->eventID;
+        $this->saveHumanReadableDate();
+        $dt = strtotime($this->eventStartTime);
+        $this->year = date('Y', $dt);
+
+        $this->eventDeptOBJ = new Department($this->eventDept);
+        $this->eventTypeOBJ = new EventType($this->eventType);
+
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEventName()
+    private function saveHumanReadableDate()
     {
-        return $this->eventName;
-    }
+        $dt = strtotime($this->eventStartTime);
+        $this->eventHumanReadableStartTime = date('d-M-y', $dt);
 
-    /**
-     * @return mixed
-     */
-    public function getEventDesc()
-    {
-        return $this->eventDesc;
+        $dt = strtotime($this->eventEndTime);
+        $this->eventHumanReadableEndTime = date('d-M-y', $dt);
     }
-
-    /**
-     * @return mixed
-     */
-    public function getEventType()
-    {
-        return $this->eventType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEventStartTime()
-    {
-        return $this->eventStartTime;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEventEndTime()
-    {
-        return $this->eventEndTime;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEventDept()
-    {
-        return $this->eventDept;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEventVenue()
-    {
-        return $this->eventVenue;
-    }
-
 
 }

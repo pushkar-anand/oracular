@@ -5,13 +5,246 @@
 {% endblock %}
 
 {% block body %}
-    <h1>
-        Hello World!
-    </h1>
-    <p>EasyPHP-boilerplate homepage</p>
+    {{ parent() }}
 
-    {% for event in events %}
-        <p>{{ event.eventName }}</p>
-        <p>{{ event.eventDesc }}</p>
-    {% endfor %}
+    <div class="row purple darken-3">
+        <div class="col s12 ">
+            <ul class="event-nav tabs purple darken-3">
+                <li class="tab col s4"><a class="active" href="#upcoming">Upcoming</a></li>
+                <li class="tab col s4"><a href="#past">Past</a></li>
+                <li class="tab col s4"><a href="#all">All</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="input-field col s8">
+                <i class="material-icons prefix" id="search-icon">search</i>
+                <input id="search_input" type="text" class="validate" onkeyup="searchEvents();">
+                <label for="search_input">Search</label>
+            </div>
+            <div class="col s2"></div>
+            <a class="col s2 waves-effect waves-light btn modal-trigger purple darken-3 filter-opt"
+               href="#filter-modal">Filters</a>
+        </div>
+    </div>
+
+
+    <div class="modal bottom-sheet" id="filter-modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                Filters:
+            </div>
+            <br/>
+            {% for key, filter in filterList %}
+                <div class="filter-title">
+                    {{ key }}
+                </div>
+                <div id="{{ key|lower }}">
+                    <p>
+                        {% for values in filter %}
+                            <label for="{{ values|lower }}">
+                                <input type="checkbox" id="{{ values|lower }}"
+                                       onchange="filterToggle(this, '{{ values|lower }}')" checked="checked"
+                                       class="filled-in"/>
+                                <span> {{ values }} </span>
+                            </label> &nbsp;
+                        {% endfor %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn purple darken-3" id="done-btn">Done</button>
+        </div>
+    </div>
+
+    <div class="container" id="event-container">
+        <div id="upcoming" class="row events">
+            {% for event in events.upcoming %}
+                <div class="col s12 m3 l4 {{ event.year }} {{ event.eventDeptOBJ.deptShortName|lower }} {{ event.eventTypeOBJ.eventTypeKey }}">
+                    <div class="search-data" style="display: none">{{ event.eventName }}</div>
+                    <div class="card medium sticky-action hoverable">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <img class="responsive-img activator event-banner"
+                                 src="/images/uploads/{{ event.eventIMG }}" alt="{{ event.eventName }} Banner"/>
+                        </div>
+                        <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">more_vert</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                            <p><span class="event-data-title">Date:</span> {{ event.eventHumanReadableStartTime }}</p>
+                            <p><span class="event-data-title">Venue:</span> {{ event.eventVenue }}</p>
+                        </div>
+
+                        <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">close</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                        </div>
+                        <div class="card-action center">
+                            <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
+                            <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="past" class="row events">
+            {% for event in events.past %}
+                <div class="col s12 m3 l4 {{ event.year }} {{ event.eventDeptOBJ.deptShortName|lower }} {{ event.eventTypeOBJ.eventTypeKey }}">
+                    <div class="search-data" style="display: none">{{ event.eventName }}</div>
+                    <div class="card medium sticky-action hoverable">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <img class="responsive-img activator event-banner"
+                                 src="/images/uploads/{{ event.eventIMG }}" alt="{{ event.eventName }} Banner"/>
+                        </div>
+                        <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">more_vert</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                            <p><span class="event-data-title">Date:</span> {{ event.eventHumanReadableStartTime }}</p>
+                            <p><span class="event-data-title">Venue:</span> {{ event.eventVenue }}</p>
+                        </div>
+
+                        <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">close</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                        </div>
+                        <div class="card-action center">
+                            <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="all" class="row events">
+            {% for event in events.upcoming %}
+                <div class="col s12 m3 l4 {{ event.year }} {{ event.eventDeptOBJ.deptShortName|lower }} {{ event.eventTypeOBJ.eventTypeKey }}">
+                    <div class="search-data" style="display: none">{{ event.eventName }}</div>
+                    <div class="card medium sticky-action hoverable">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <img class="responsive-img activator event-banner"
+                                 src="/images/uploads/{{ event.eventIMG }}" alt="{{ event.eventName }} Banner"/>
+                        </div>
+                        <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">more_vert</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                            <p><span class="event-data-title">Date:</span> {{ event.eventHumanReadableStartTime }}</p>
+                            <p><span class="event-data-title">Venue:</span> {{ event.eventVenue }}</p>
+                        </div>
+
+                        <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">close</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                        </div>
+                        <div class="card-action center">
+                            <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
+                            <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for event in events.past %}
+                <div class="col s12 m3 l4 {{ event.year }} {{ event.eventDeptOBJ.deptShortName|lower }} {{ event.eventTypeOBJ.eventTypeKey }}">
+                    <div class="search-data" style="display: none">{{ event.eventName }}</div>
+                    <div class="card medium sticky-action hoverable">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <img class="responsive-img activator event-banner"
+                                 src="/images/uploads/{{ event.eventIMG }}" alt="{{ event.eventName }} Banner"/>
+                        </div>
+                        <div class="card-content">
+                <span class="card-title activator grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">more_vert</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                            <p><span class="event-data-title">Date:</span> {{ event.eventHumanReadableStartTime }}</p>
+                            <p><span class="event-data-title">Venue:</span> {{ event.eventVenue }}</p>
+                        </div>
+
+                        <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">
+                    {{ event.eventName }}
+                    <i class="material-icons right">close</i>
+                </span>
+                            <p>{{ event.eventDesc }}</p>
+                        </div>
+                        <div class="card-action center">
+                            <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script>
+
+        const searchEvents = () => {
+            const key = $('#search_input').val().toUpperCase();
+            //console.log('Searching for: ' + key);
+
+            $("#upcoming > div ").each((index, elem) => {
+                searcher(elem, key);
+            });
+            $("#past > div ").each((index, elem) => {
+                searcher(elem, key);
+            });
+            $("#all > div").each((index, elem) => {
+                searcher(elem, key);
+            });
+
+        };
+
+        const searcher = (elem, key) => {
+            let p = $(elem).children("div.search-data").text().toUpperCase();
+            //console.log("Searching in: " + p);
+            if (p.indexOf(key) > -1) {
+                $(elem).css("display", "");
+            } else {
+                $(elem).css("display", "none");
+            }
+        };
+
+        $(document).ready(function () {
+            $('.tabs').tabs();
+            $('.modal').modal();
+
+            $("#done-btn").click(() => {
+                $("#filter-modal").modal('close');
+            });
+        });
+
+        const filterToggle = (elem, classToToggle) => {
+            const jSelector = $('.' + classToToggle);
+            if (elem.checked === true) {
+                jSelector.show();
+            } else {
+                jSelector.hide();
+            }
+        };
+    </script>
 {% endblock %}

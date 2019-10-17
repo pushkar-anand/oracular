@@ -2,3 +2,5 @@ vendor/
 .idea/
 dump.sql
 logs/
+public/images/uploads/
+!public/images/uploads/default-banner.jpg

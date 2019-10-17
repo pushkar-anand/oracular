@@ -1,0 +1,46 @@
+nav {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.filter-opt {
+
+}
+
+span.event-data-title {
+    font-weight: bolder;
+}
+
+
+.event-nav li.tab a {
+    color: #9c9c9c;
+    font-weight: bolder;
+}
+
+.event-nav li.tab a.active {
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+.event-nav li.tab a:hover {
+    color: #ffffff;
+    font-weight: bolder;
+    background-color: #4a148c;
+}
+
+i#search-icon.material-icons.prefix.active {
+    color: #6a1b9a !important;
+}
+
+label.active {
+    color: #6a1b9a;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]) + label {
+    color: #6a1b9a;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid #6a1b9a;
+    box-shadow: 0 1px 0 0 #6a1b9a;
+}
