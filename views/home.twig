@@ -3,11 +3,15 @@
 {% block head %}
     {{ parent() }}
 {% endblock %}
-{% block title %} {{ title }} {% endblock %}
 
 {% block body %}
     <h1>
         Hello World!
     </h1>
     <p>EasyPHP-boilerplate homepage</p>
+
+    {% for event in events %}
+        <p>{{ event.eventName }}</p>
+        <p>{{ event.eventDesc }}</p>
+    {% endfor %}
 {% endblock %}
