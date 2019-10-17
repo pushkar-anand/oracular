@@ -22,14 +22,14 @@ class Event
     private $oracularDB;
     private $logger;
 
-    private $eventID;
-    private $eventName;
-    private $eventDesc;
-    private $eventType;
-    private $eventStartTime;
-    private $eventEndTime;
-    private $eventDept;
-    private $eventVenue;
+    public $eventID;
+    public $eventName;
+    public $eventDesc;
+    public $eventType;
+    public $eventStartTime;
+    public $eventEndTime;
+    public $eventDept;
+    public $eventVenue;
 
 
     public function __construct($eventID = null)

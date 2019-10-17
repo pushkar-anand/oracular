@@ -71,13 +71,14 @@ class DataManager
      */
     private function fetchData()
     {
+
         $query = "SELECT {$this->tableData[self::TABLE_PRIMARY_FIELD_KEY]} FROM {$this->tableData[self::TABLE_NAME_KEY]}";
         $result = $this->oracularDB->dbConnection->getConn()->query($query);
-
+        $i = 0;
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $obj = $this->makeObject($row);
-                array_push($data, $obj);
+                array_push($this->data, $obj);
             }
         }
     }

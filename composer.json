@@ -1,27 +1,29 @@
 {
-    "name": "pushkar/easy-php-boilerplate",
-    "description": "Boilerplate for easily starting PHP projects.",
-    "type": "project",
-    "require": {
-        "php": ">=7.3",
-        "pushkar/php-useful": "^2.0",
-        "pushkar/easy-router": "^0.1.2",
-      "twig/twig": "^2.12",
-      "monolog/monolog": "^2.0"
+  "name": "pushkar/easy-php-boilerplate",
+  "description": "Boilerplate for easily starting PHP projects.",
+  "type": "project",
+  "require": {
+    "php": ">=7.3",
+    "ext-json": "*",
+    "ext-mysqli": "*",
+    "pushkar/php-useful": "^2.0",
+    "pushkar/easy-router": "^0.1.2",
+    "twig/twig": "^2.12",
+    "monolog/monolog": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "OracularApp\\": "src/classes"
     },
-    "autoload": {
-        "psr-4": {
-          "OracularApp\\": "src/classes"
-        },
-      "files": [
-        "src/define.php"
-      ]
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Pushkar Anand",
-            "email": "anandpushkar088@gmail.com"
-        }
+    "files": [
+      "src/define.php"
     ]
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pushkar Anand",
+      "email": "anandpushkar088@gmail.com"
+    }
+  ]
 }
