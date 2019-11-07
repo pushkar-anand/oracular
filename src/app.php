@@ -45,6 +45,12 @@ try {
         echo $twig->render('home.twig', $twigData);
     });
 
+    $router->addMatch('GET', '/admin/login', function () {
+        global $twig;
+
+        echo $twig->render('admin.login.twig');
+    });
+
     $router->execute();
 
 } catch (Exception $e) {

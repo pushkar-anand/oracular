@@ -1,6 +1,14 @@
+:root {
+    --theme-color: #6a1b9a;
+}
+
 nav {
     padding-left: 15px;
     padding-right: 15px;
+}
+
+.btn {
+    background-color: var(--theme-color);
 }
 
 .filter-opt {
@@ -29,18 +37,54 @@ span.event-data-title {
 }
 
 i#search-icon.material-icons.prefix.active {
-    color: #6a1b9a !important;
+    color: var(--theme-color) !important;
 }
 
 label.active {
-    color: #6a1b9a;
+    color: var(--theme-color);
 }
 
 input[type=text]:not(.browser-default):focus:not([readonly]) + label {
-    color: #6a1b9a;
+    color: var(--theme-color);
 }
 
 input[type=text]:not(.browser-default):focus:not([readonly]) {
-    border-bottom: 1px solid #6a1b9a;
-    box-shadow: 0 1px 0 0 #6a1b9a;
+    border-bottom: 1px solid var(--theme-color);
+    box-shadow: 0 1px 0 0 var(--theme-color);
 }
+
+input[type=email]:not(.browser-default):focus:not([readonly]) + label {
+    color: var(--theme-color);
+}
+
+input[type=email]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid var(--theme-color);
+    box-shadow: 0 1px 0 0 var(--theme-color);
+}
+
+input[type=password]:not(.browser-default):focus:not([readonly]) + label {
+    color: var(--theme-color);
+}
+
+input[type=password]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid var(--theme-color);
+    box-shadow: 0 1px 0 0 var(--theme-color);
+}
+
+.center-block {
+    width: 70%;
+    margin: auto;
+}
+
+#admin-login-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    min-height: 500px;
+}
+
+#admin-login-form .card .card-content {
+    width: 500px;
+}
+

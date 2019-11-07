@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="section" id="admin-login-form">
+        {#        <div class="container">#}
+        <form class="form" method="post" id="signup-form" action="/login">
+            <div class="card">
+                <div class="card-content">
+
+                    <span class="card-title">Login</span>
+
+                    <div class="input-field">
+                        <input type="email" name="email" required
+                               class="validate "
+                               autocomplete="email"
+                               id="email" value=""/>
+                        <label for="name">Email</label>
+                        <span class="helper-text" data-error="Invalid email"></span>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="password" name="password" required
+                               title="Minimum 8 characters"
+                               class="validate "
+                               autocomplete="new-password"
+                               id="password"/>
+                        <label for="password">Password</label>
+                    </div>
+
+                    <br/>
+                    <div class="right-align">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Register
+                        </button>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+        {#        </div>#}
+    </div>
+
+{% endblock %}
