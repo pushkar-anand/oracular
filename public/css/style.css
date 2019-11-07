@@ -1,5 +1,6 @@
 :root {
     --theme-color: #6a1b9a;
+    --theme-color-dark: #4a148c;
 }
 
 nav {
@@ -33,7 +34,7 @@ span.event-data-title {
 .event-nav li.tab a:hover {
     color: #ffffff;
     font-weight: bolder;
-    background-color: #4a148c;
+    background-color: var(--theme-color-dark);
 }
 
 i#search-icon.material-icons.prefix.active {
@@ -86,5 +87,13 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
 
 #admin-login-form .card .card-content {
     width: 500px;
+}
+
+.btn-floating {
+    background-color: var(--theme-color);
+}
+
+.btn-floating:hover {
+    background-color: var(--theme-color-dark);
 }
 

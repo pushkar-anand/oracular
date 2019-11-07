@@ -75,7 +75,7 @@
                     {{ event.eventName }}
                     <i class="material-icons right">more_vert</i>
                 </span>
-                            <p>{{ event.eventDesc }}</p>
+                            <p style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">{{ event.eventDesc }}</p>
                             <p><span class="event-data-title">Date:</span> {{ event.eventHumanReadableStartTime }}</p>
                             <p><span class="event-data-title">Venue:</span> {{ event.eventVenue }}</p>
                         </div>
@@ -194,6 +194,14 @@
             {% endfor %}
         </div>
     </div>
+
+    {% if admin %}
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large">
+                <i class="large material-icons">add</i>
+            </a>
+        </div>
+    {% endif %}
 
 
 

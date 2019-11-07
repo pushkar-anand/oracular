@@ -16,7 +16,8 @@
       "OracularApp\\": "src/classes"
     },
     "files": [
-      "src/define.php"
+      "src/define.php",
+      "src/helpers.php"
     ]
   },
   "license": "MIT",

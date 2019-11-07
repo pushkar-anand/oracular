@@ -27,4 +27,9 @@ class Session
         session_regenerate_id(true);
     }
 
+    public function isAdminLoggedIn(): bool
+    {
+        return true;
+    }
+
 }

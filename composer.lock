@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-  "content-hash": "c27dea2df8a771577ea1bdb7d395998c",
+  "content-hash": "b1f39b09b63804854f868ed248461e2b",
     "packages": [
         {
           "name": "monolog/monolog",
@@ -89,16 +89,16 @@
         },
       {
         "name": "psr/log",
-        "version": "1.1.0",
+        "version": "1.1.2",
         "source": {
           "type": "git",
           "url": "https://github.com/php-fig/log.git",
-          "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
+          "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
         },
         "dist": {
           "type": "zip",
-          "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-          "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+          "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+          "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
           "shasum": ""
         },
         "require": {
@@ -107,7 +107,7 @@
         "type": "library",
         "extra": {
           "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.1.x-dev"
           }
         },
         "autoload": {
@@ -132,7 +132,7 @@
           "psr",
           "psr-3"
         ],
-        "time": "2018-11-20T15:27:04+00:00"
+        "time": "2019-11-01T11:05:21+00:00"
       },
       {
             "name": "pushkar/easy-router",
@@ -340,16 +340,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.12.0",
+          "version": "v2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c7a85fd08348ca04b4d8f234f49583d9910906aa"
+              "reference": "ddd4134af9bfc6dba4eff7c8447444ecc45b9ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c7a85fd08348ca04b4d8f234f49583d9910906aa",
-                "reference": "c7a85fd08348ca04b4d8f234f49583d9910906aa",
+              "url": "https://api.github.com/repos/twigphp/Twig/zipball/ddd4134af9bfc6dba4eff7c8447444ecc45b9ee5",
+              "reference": "ddd4134af9bfc6dba4eff7c8447444ecc45b9ee5",
                 "shasum": ""
             },
             "require": {
@@ -403,7 +403,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-10-05T16:42:38+00:00"
+          "time": "2019-10-17T07:34:53+00:00"
         }
     ],
     "packages-dev": [],
@@ -413,7 +413,9 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3"
+      "php": ">=7.3",
+      "ext-json": "*",
+      "ext-mysqli": "*"
     },
     "platform-dev": []
 }

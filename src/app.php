@@ -3,8 +3,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use EasyRoute\Route;
 use OracularApp\Config;
-use OracularApp\DataManager;
-use OracularApp\EventClassifier;
 use OracularApp\Logger;
 use OracularApp\Session;
 use PhpUseful\EasyHeaders;
@@ -23,31 +21,32 @@ $twig = new Environment($loader);
 $router = new Route();
 
 try {
+
+    $router->addMatch('GET', '/setup/first', function () use ($twig) {
+
+    });
+
     $router->addMatch('GET', '/', function () {
         global $twig;
         $twigData = array();
-
-        $dataManager = new DataManager(DataManager::EVENT);
-        $eventsData = $dataManager->getArrayData();
-
-        $eventClassifier = new EventClassifier($eventsData);
-
-        $twigData['events'] = $eventClassifier->getClassifiedEvents();
-        $twigData['title'] = 'Oracular';
-        $twigData['filterList'] = array(
-            'Year' => $eventClassifier->getYears(),
-            'Departments' => $eventClassifier->getDepartments(),
-            'Type' => $eventClassifier->getTypes()
-        );
-
-        //var_dump($eventsData[0]);
-
+        appendEventsData($twigData);
         echo $twig->render('home.twig', $twigData);
     });
 
-    $router->addMatch('GET', '/admin/login', function () {
-        global $twig;
+    $router->addMatch('GET', '/admin', function () use ($twig, $session) {
+        if (!$session->isAdminLoggedIn()) {
+            EasyHeaders::redirect('/admin/login');
+        }
+        $twigData = array();
+        $twigData['admin'] = true;
+        appendEventsData($twigData);
+        echo $twig->render('home.twig', $twigData);
+    });
 
+    $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
+        if ($session->isAdminLoggedIn()) {
+            EasyHeaders::redirect('/admin');
+        }
         echo $twig->render('admin.login.twig');
     });
 
