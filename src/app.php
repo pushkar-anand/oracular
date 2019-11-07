@@ -7,6 +7,7 @@ use OracularApp\DataManager;
 use OracularApp\EventClassifier;
 use OracularApp\Logger;
 use OracularApp\Session;
+use PhpUseful\EasyHeaders;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -48,4 +49,5 @@ try {
 
 } catch (Exception $e) {
     $logger->pushToCritical($e);
+    EasyHeaders::server_error();
 }
