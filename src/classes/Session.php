@@ -2,11 +2,17 @@
 
 namespace OracularApp;
 
+use Exception;
+use OracularApp\Exceptions\UserNotFoundException;
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 
 class Session
 {
+    const SESSION_LOGGED_IN_KEY = 'LOGGED_IN';
+    const SESSION_ADMIN_LOGGED_IN_KEY = 'ADMIN_LOGGED_IN';
+    const SESSION_ADMIN_USER = 'LOGGED.ADMIN.USER';
 
     public function __construct()
     {
@@ -29,7 +35,31 @@ class Session
 
     public function isAdminLoggedIn(): bool
     {
-        return true;
+        return false;
+    }
+
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return bool
+     * @throws UserNotFoundException
+     */
+    public function adminLogin(string $email, string $password): bool
+    {
+        try {
+            $admin = new Admin(null, $email);
+            if ($admin->login($password) === true) {
+                $_SESSION[self::SESSION_LOGGED_IN_KEY] = 1;
+                $_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY] = 1;
+                $_SESSION[self::SESSION_ADMIN_USER] = $admin->adminID;
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            throw new UserNotFoundException("Invalid credentials or No such admin.");
+        }
     }
 
 }

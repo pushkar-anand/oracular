@@ -17,20 +17,27 @@
 
                     <div class="input-field">
                         <input type="email" name="email" required
-                               class="validate "
+                               class="validate {% if error.email %} {{ "invalid" }} {% endif %}"
                                autocomplete="email"
                                id="email" value=""/>
                         <label for="name">Email</label>
-                        <span class="helper-text" data-error="Invalid email"></span>
+                        {% if error.email %}
+                            <span class="helper-text" data-error="{{ error.email }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid email"></span>
+                        {% endif %}
                     </div>
 
                     <div class="input-field">
                         <input type="password" name="password" required
                                title="Minimum 8 characters"
-                               class="validate "
-                               autocomplete="new-password"
+                               class="validate {% if error.password %} {{ "invalid" }} {% endif %}"
+                               autocomplete="password"
                                id="password"/>
                         <label for="password">Password</label>
+                        {% if error.password %}
+                            <span class="helper-text" data-error="{{ error.password }}"></span>
+                        {% endif %}
                     </div>
 
                     <br/>

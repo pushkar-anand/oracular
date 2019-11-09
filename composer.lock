@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-  "content-hash": "b1f39b09b63804854f868ed248461e2b",
+  "content-hash": "09c4326fbc714d26e3f9d8c97d59dcdd",
     "packages": [
         {
           "name": "monolog/monolog",
@@ -181,16 +181,16 @@
         },
         {
             "name": "pushkar/php-useful",
-            "version": "v2.0.3",
+          "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pushkar-anand/php-useful.git",
-                "reference": "c56a35c09ddbdc1795e42c3493adca57c69da9b5"
+              "reference": "02f12bfcedfcd3e1df8a78ac8de2088085bb3a27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pushkar-anand/php-useful/zipball/c56a35c09ddbdc1795e42c3493adca57c69da9b5",
-                "reference": "c56a35c09ddbdc1795e42c3493adca57c69da9b5",
+              "url": "https://api.github.com/repos/pushkar-anand/php-useful/zipball/02f12bfcedfcd3e1df8a78ac8de2088085bb3a27",
+              "reference": "02f12bfcedfcd3e1df8a78ac8de2088085bb3a27",
                 "shasum": ""
             },
             "require": {
@@ -219,7 +219,7 @@
             ],
             "description": "Contains various classes and functions to many common tasks in PHP.",
             "homepage": "https://github.com/pushkar-anand/php-useful",
-            "time": "2019-09-22T15:00:17+00:00"
+          "time": "2019-11-07T10:58:33+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
