@@ -17,12 +17,16 @@ class Admin
     public const ADMIN_EMAIL_FIELD = 'email';
     public const ADMIN_PASS_FIELD = 'password';
     public const ADMIN_DEPT_FIELD = 'dept';
+    public const ADMIN_LEVEL_FIELD = 'admin_level';
+
+    public static $adminLevelValues = array('super' => 'super', 'mid' => 'mid', 'low' => 'low');
 
     public $adminID;
     public $adminEmail;
     public $adminName;
     public $adminDept;
     public $adminDeptObj;
+    public $adminLevel;
     private $adminPassword;
     private $oracularDB;
     private $logger;
@@ -51,6 +55,7 @@ class Admin
             $this->adminEmail = $result[self::ADMIN_EMAIL_FIELD];
             $this->adminPassword = $result[self::ADMIN_PASS_FIELD];
             $this->adminDept = $result[self::ADMIN_DEPT_FIELD];
+            $this->adminLevel = $result[self::ADMIN_LEVEL_FIELD];
             $this->parseAdminData();
         }
     }
@@ -98,7 +103,7 @@ class Admin
         $this->adminDeptObj = new Department($this->adminDept);
     }
 
-    public function newAdmin($adminName, $adminEmail, $adminPassword, $adminDept)
+    public function newAdmin($adminName, $adminEmail, $adminPassword, $adminDept, $adminLevel)
     {
         $fields = array(
             self::ADMIN_NAME_FIELD,
@@ -115,7 +120,7 @@ class Admin
                 self::ADMIN_TABLE_NAME,
                 $fields,
                 'sssi',
-                $adminName, $adminEmail, $hashed_pwd, $adminDept
+                $adminName, $adminEmail, $hashed_pwd, $adminDept, $adminLevel
             );
 
             $this->adminID = $id;
@@ -123,6 +128,7 @@ class Admin
             $this->adminEmail = $adminEmail;
             $this->adminPassword = $hashed_pwd;
             $this->adminDept = $adminDept;
+            $this->adminLevel = $adminLevel;
             $this->parseAdminData();
 
         } catch (Exception $e) {

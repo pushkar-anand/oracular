@@ -38,6 +38,7 @@ try {
         }
         if ($session->isAdminLoggedIn()) {
             $twigData['adminLoggedIN'] = true;
+            appendAdminData($twigData);
         }
         appendEventsData($twigData);
         echo $twig->render('home.twig', $twigData);
@@ -143,6 +144,43 @@ try {
             $data['error'] = array('email' => 'Email is not registered.');
         }
         echo $twig->render('login.twig', $data);
+    });
+
+    $router->addMatch('GET', '/event/new', function () use ($twig, $session) {
+        if ($session->isAdminLoggedIn() === false) {
+            EasyHeaders::unauthorized();
+        }
+        $twigData = array();
+        appendAdminData($twigData);
+        echo $twig->render('event.add.twig', $twigData);
+    });
+
+    $router->addMatch('POST', '/event/new', function () use ($twig, $session) {
+        if ($session->isAdminLoggedIn() === false) {
+            EasyHeaders::unauthorized();
+        }
+        $twigData = array();
+        appendAdminData($twigData);
+        $error = array();
+        if (isset($_POST[''])) {
+
+        } else {
+            $error['error'] = 'Fill all the fields.';
+        }
+        $twigData['error'] = $error;
+        echo $twig->render('event.add.twig', $twigData);
+    });
+
+    $router->addMatch('POST', '/department/new', function () use ($session) {
+        if ($session->isAdminLoggedIn() === false && $session->isMidAdmin() === false) {
+            EasyHeaders::unauthorized();
+        }
+    });
+
+    $router->addMatch('POST', '/admin/new', function () use ($session) {
+        if ($session->isAdminLoggedIn() === false && $session->isSuperAdmin() === false) {
+            EasyHeaders::unauthorized();
+        }
     });
 
     $router->addMatch('GET', '/logout', function () use ($session) {

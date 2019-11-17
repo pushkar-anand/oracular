@@ -11,6 +11,7 @@ class Session
 {
     const SESSION_LOGGED_IN_KEY = 'LOGGED_IN';
     const SESSION_ADMIN_LOGGED_IN_KEY = 'ADMIN_LOGGED_IN';
+    const SESSION_ADMIN_LEVEL = 'ADMIN.LEVEL';
     const SESSION_ADMIN = 'LOGGED.ADMIN';
     const SESSION_USER = 'LOGGED.USER';
 
@@ -63,6 +64,7 @@ class Session
                 $_SESSION[self::SESSION_LOGGED_IN_KEY] = 1;
                 $_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY] = 1;
                 $_SESSION[self::SESSION_ADMIN] = $admin->adminID;
+                $_SESSION[self::SESSION_ADMIN_LEVEL] = $admin->adminLevel;
                 return true;
             } else {
                 return false;
@@ -100,6 +102,21 @@ class Session
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
         session_destroy();
+    }
+
+    public function isLowAdmin()
+    {
+        return ($_SESSION[self::SESSION_ADMIN_LEVEL] === Admin::$adminLevelValues['low']) || $this->isMidAdmin();
+    }
+
+    public function isMidAdmin()
+    {
+        return ($_SESSION[self::SESSION_ADMIN_LEVEL] === Admin::$adminLevelValues['mid']) || $this->isSuperAdmin();
+    }
+
+    public function isSuperAdmin()
+    {
+        return $_SESSION[self::SESSION_ADMIN_LEVEL] === Admin::$adminLevelValues['super'];
     }
 
 }
