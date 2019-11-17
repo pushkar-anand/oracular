@@ -52,6 +52,7 @@ try {
 
     $router->addMatch('POST', '/user/login', function () use ($twig, $session) {
         $twigData = array();
+        $twigData['login_redirect'] = '/user/login';
         $email = Functions::escapeInput($_POST['email']);
         $password = Functions::escapeInput($_POST['password']);
         try {
@@ -120,34 +121,28 @@ try {
     });
 
 
-    $router->addMatch('GET', '/admin/dashboard', function () use ($twig, $session) {
-        redirectIfNotLoggedIN($session);
-        $twigData = array();
-        $twigData['admin'] = true;
-        appendEventsData($twigData);
-        echo $twig->render('home.twig', $twigData);
-    });
-
     $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
         redirectIfLoggedIN($session);
-        echo $twig->render('admin.login.twig');
+        $twigData['login_redirect'] = '/admin/login';
+        echo $twig->render('login.twig', $twigData);
     });
 
     $router->addMatch('POST', '/admin/login', function () use ($twig, $session) {
         $data = array();
+        $data['login_redirect'] = '/admin/login';
         $email = Functions::escapeInput($_POST['email']);
         $password = Functions::escapeInput($_POST['password']);
         try {
             $admin = $session->adminLogin($email, $password);
             if ($admin === true) {
-                EasyHeaders::redirect('/admin/dashboard');
+                EasyHeaders::redirect('/?admin-logged-in');
             } else {
                 $data['error'] = array('password' => 'Incorrect Password.');
             }
         } catch (UserNotFoundException $e) {
             $data['error'] = array('email' => 'Email is not registered.');
         }
-        echo $twig->render('admin.login.twig', $data);
+        echo $twig->render('login.twig', $data);
     });
 
     $router->addMatch('GET', '/logout', function () use ($session) {

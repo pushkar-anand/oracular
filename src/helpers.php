@@ -31,17 +31,8 @@ function appendUserData(array &$twigData)
 
 function redirectIfLoggedIN(Session $session)
 {
-    if ($session->isUserLoggedIn()) {
+    if ($session->isUserLoggedIn() || $session->isAdminLoggedIn()) {
         EasyHeaders::redirect('/?user-logged-in');
-    } elseif ($session->isAdminLoggedIn()) {
-        EasyHeaders::redirect('/admin/dashboard');
-    }
-}
-
-function redirectIfNotLoggedIN(Session $session)
-{
-    if ($session->isAdminLoggedIn() === false) {
-        EasyHeaders::redirect('/admin/login');
     }
 }
 
