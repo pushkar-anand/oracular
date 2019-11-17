@@ -2,17 +2,17 @@
 
 namespace OracularApp;
 
-use Exception;
-use OracularApp\Exceptions\UserNotFoundException;
-
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use Exception;
+use OracularApp\Exceptions\UserNotFoundException;
 
 class Session
 {
     const SESSION_LOGGED_IN_KEY = 'LOGGED_IN';
     const SESSION_ADMIN_LOGGED_IN_KEY = 'ADMIN_LOGGED_IN';
-    const SESSION_ADMIN_USER = 'LOGGED.ADMIN.USER';
+    const SESSION_ADMIN = 'LOGGED.ADMIN';
+    const SESSION_USER = 'LOGGED.USER';
 
     public function __construct()
     {
@@ -35,9 +35,19 @@ class Session
 
     public function isAdminLoggedIn(): bool
     {
-        return false;
+        return $this->sessionSet() && isset($_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY]) && $_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY] === 1;
     }
 
+    private function sessionSet(): bool
+    {
+        return (isset($_SESSION[self::SESSION_LOGGED_IN_KEY])) &&
+            (isset($_SESSION[self::SESSION_USER]) || isset($_SESSION[self::SESSION_ADMIN]));
+    }
+
+    public function isUserLoggedIn(): bool
+    {
+        return $this->sessionSet() && !$this->isAdminLoggedIn();
+    }
 
     /**
      * @param string $email
@@ -52,13 +62,35 @@ class Session
             if ($admin->login($password) === true) {
                 $_SESSION[self::SESSION_LOGGED_IN_KEY] = 1;
                 $_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY] = 1;
-                $_SESSION[self::SESSION_ADMIN_USER] = $admin->adminID;
+                $_SESSION[self::SESSION_ADMIN] = $admin->adminID;
                 return true;
             } else {
                 return false;
             }
         } catch (Exception $e) {
             throw new UserNotFoundException("Invalid credentials or No such admin.");
+        }
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return bool
+     * @throws UserNotFoundException
+     */
+    public function userLogin(string $email, string $password): bool
+    {
+        try {
+            $user = new User(null, $email);
+            if ($user->login($password)) {
+                $_SESSION[self::SESSION_LOGGED_IN_KEY] = 1;
+                $_SESSION[self::SESSION_USER] = $user->userID;
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            throw new UserNotFoundException("Invalid credentials or No such user.");
         }
     }
 

@@ -3,6 +3,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use OracularApp\DataManager;
 use OracularApp\EventClassifier;
+use OracularApp\Session;
+use PhpUseful\EasyHeaders;
 
 function appendEventsData(array &$twigData)
 {
@@ -18,5 +20,21 @@ function appendEventsData(array &$twigData)
         'Departments' => $eventClassifier->getDepartments(),
         'Type' => $eventClassifier->getTypes()
     );
+}
+
+function redirectIfLoggedIN(Session $session)
+{
+    if ($session->isUserLoggedIn()) {
+        EasyHeaders::redirect('/?user-logged-in');
+    } elseif ($session->isAdminLoggedIn()) {
+        EasyHeaders::redirect('/admin/dashboard');
+    }
+}
+
+function redirectIfNotLoggedIN(Session $session)
+{
+    if ($session->isAdminLoggedIn() === false) {
+        EasyHeaders::redirect('/admin/login');
+    }
 }
 

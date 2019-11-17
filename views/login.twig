@@ -11,7 +11,7 @@
 {% block body %}
     {{ parent() }}
 
-    <div class="section" id="admin-login-form">
+    <div class="section form-wrapper">
         {#        <div class="container">#}
         <form class="form" method="post" id="signup-form" action="{{ login_redirect }}">
             <div class="card">
@@ -24,7 +24,7 @@
                                class="validate {% if error.email %} {{ "invalid" }} {% endif %}"
                                autocomplete="email"
                                id="email" value=""/>
-                        <label for="name">Email</label>
+                        <label for="email">Email</label>
                         {% if error.email %}
                             <span class="helper-text" data-error="{{ error.email }}"></span>
                         {% else %}

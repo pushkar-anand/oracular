@@ -26,27 +26,48 @@ $router = new Route();
 
 try {
 
-    $router->addMatch('GET', '/setup/first', function () use ($twig) {
-        echo $twig->render('setup.twig');
-    });
+    /*    $router->addMatch('GET', '/setup/first', function () use ($twig) {
+            echo $twig->render('setup.twig');
+        });*/
 
-    $router->addMatch('GET', '/', function () use ($twig) {
+    $router->addMatch('GET', '/', function () use ($twig, $session) {
         $twigData = array();
+        if ($session->isUserLoggedIn()) {
+            $twigData['userLoggedIN'] = true;
+        }
+        if ($session->isAdminLoggedIn()) {
+            $twigData['adminLoggedIN'] = true;
+        }
         appendEventsData($twigData);
         echo $twig->render('home.twig', $twigData);
     });
 
-    $router->addMatch('GET', '/login', function () use ($twig) {
+    $router->addMatch('GET', '/login', function () use ($twig, $session) {
+        redirectIfLoggedIN($session);
         $twigData = array();
         $twigData['login_redirect'] = '/user/login';
         echo $twig->render('login.twig', $twigData);
     });
 
-    $router->addMatch('POST', '/user/login', function () use ($twig) {
+    $router->addMatch('POST', '/user/login', function () use ($twig, $session) {
         $twigData = array();
+        $email = Functions::escapeInput($_POST['email']);
+        $password = Functions::escapeInput($_POST['password']);
+        try {
+            $admin = $session->userLogin($email, $password);
+            if ($admin === true) {
+                EasyHeaders::redirect('/?user-logged-in');
+            } else {
+                $twigData['error'] = array('password' => 'Incorrect Password.');
+            }
+        } catch (UserNotFoundException $e) {
+            $twigData['error'] = array('email' => 'Email is not registered.');
+        }
+        echo $twig->render('login.twig', $twigData);
     });
 
-    $router->addMatch('GET', '/user/register', function () use ($twig) {
+    $router->addMatch('GET', '/user/register', function () use ($twig, $session) {
+        redirectIfLoggedIN($session);
         $dataManager = new DataManager(DataManager::DEPARTMENT);
         $twigData = array();
         $twigData['departments'] = $dataManager->getArrayData();
@@ -99,9 +120,7 @@ try {
 
 
     $router->addMatch('GET', '/admin/dashboard', function () use ($twig, $session) {
-        if (!$session->isAdminLoggedIn()) {
-            EasyHeaders::redirect('/admin/login');
-        }
+        redirectIfNotLoggedIN($session);
         $twigData = array();
         $twigData['admin'] = true;
         appendEventsData($twigData);
@@ -109,9 +128,7 @@ try {
     });
 
     $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
-        if ($session->isAdminLoggedIn()) {
-            EasyHeaders::redirect('/admin/dashboard');
-        }
+        redirectIfLoggedIN($session);
         echo $twig->render('admin.login.twig');
     });
 
