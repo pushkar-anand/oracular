@@ -4,6 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use OracularApp\DataManager;
 use OracularApp\EventClassifier;
 use OracularApp\Session;
+use OracularApp\User;
 use PhpUseful\EasyHeaders;
 
 function appendEventsData(array &$twigData)
@@ -20,6 +21,12 @@ function appendEventsData(array &$twigData)
         'Departments' => $eventClassifier->getDepartments(),
         'Type' => $eventClassifier->getTypes()
     );
+}
+
+function appendUserData(array &$twigData)
+{
+    $user = new User($_SESSION[Session::SESSION_USER]);
+    $twigData['user'] = $user;
 }
 
 function redirectIfLoggedIN(Session $session)

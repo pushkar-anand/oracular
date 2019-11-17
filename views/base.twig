@@ -21,9 +21,11 @@
                 </a>
                 <ul class="right hide-on-med-and-down">
                     {% if userLoggedIN %}
-                        <li><a href="/user/dashboard">User Dashboard</a></li>
+                        <li><a href="/user/dashboard">{{ user.name }}</a></li>
+                        <li><a href="/logout">Logout</a></li>
                     {% elseif adminLoggedIN %}
                         <li><a href="/admin/dashboard">Admin Dashboard</a></li>
+                        <li><a href="/logout">Logout</a></li>
                     {% else %}
                         <li><a href="/user/register">Register</a></li>
                         <li><a href="/login">Login</a></li>
@@ -34,9 +36,11 @@
 
         <ul class="sidenav" id="mobile-nav">
             {% if userLoggedIN %}
-                <li><a href="/user/dashboard">User Dashboard</a></li>
+                <li><a href="/user/dashboard">{{ user.name }}</a></li>
+                <li><a href="/logout">Logout</a></li>
             {% elseif adminLoggedIN %}
                 <li><a href="/admin/dashboard">Admin Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
             {% else %}
                 <li><a href="/user/register">Register</a></li>
                 <li><a href="/login">Login</a></li>

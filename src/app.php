@@ -34,6 +34,7 @@ try {
         $twigData = array();
         if ($session->isUserLoggedIn()) {
             $twigData['userLoggedIN'] = true;
+            appendUserData($twigData);
         }
         if ($session->isAdminLoggedIn()) {
             $twigData['adminLoggedIN'] = true;
