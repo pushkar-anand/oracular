@@ -150,6 +150,11 @@ try {
         echo $twig->render('admin.login.twig', $data);
     });
 
+    $router->addMatch('GET', '/logout', function () use ($session) {
+        $session->logout();
+        EasyHeaders::redirect('/?logged-out');
+    });
+
     $router->execute();
 
 } catch (Exception $e) {

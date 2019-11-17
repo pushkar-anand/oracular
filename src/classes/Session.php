@@ -33,9 +33,9 @@ class Session
         session_regenerate_id(true);
     }
 
-    public function isAdminLoggedIn(): bool
+    public function isUserLoggedIn(): bool
     {
-        return $this->sessionSet() && isset($_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY]) && $_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY] === 1;
+        return $this->sessionSet() && !$this->isAdminLoggedIn();
     }
 
     private function sessionSet(): bool
@@ -44,9 +44,9 @@ class Session
             (isset($_SESSION[self::SESSION_USER]) || isset($_SESSION[self::SESSION_ADMIN]));
     }
 
-    public function isUserLoggedIn(): bool
+    public function isAdminLoggedIn(): bool
     {
-        return $this->sessionSet() && !$this->isAdminLoggedIn();
+        return $this->sessionSet() && isset($_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY]) && $_SESSION[self::SESSION_ADMIN_LOGGED_IN_KEY] === 1;
     }
 
     /**
@@ -92,6 +92,14 @@ class Session
         } catch (Exception $e) {
             throw new UserNotFoundException("Invalid credentials or No such user.");
         }
+    }
+
+    public function logout()
+    {
+        $_SESSION = array();
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        session_destroy();
     }
 
 }
