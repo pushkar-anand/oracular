@@ -7,6 +7,7 @@ use OracularApp\DataManager;
 use OracularApp\Exceptions\UserNotFoundException;
 use OracularApp\Logger;
 use OracularApp\Session;
+use OracularApp\User;
 use PhpUseful\EasyHeaders;
 use PhpUseful\Functions;
 use Twig\Environment;
@@ -55,6 +56,45 @@ try {
 
     $router->addMatch('POST', '/user/register', function () use ($twig) {
         $twigData = array();
+        $error = array();
+        if (
+            isset($_POST['name']) &&
+            isset($_POST['email']) &&
+            isset($_POST['password']) &&
+            isset($_POST['gender']) &&
+            isset($_POST['usn']) &&
+            isset($_POST['college']) &&
+            isset($_POST['dept']) &&
+            isset($_POST['semester']) &&
+            isset($_POST['section'])) {
+
+            $name = Functions::escapeInput($_POST['name']);
+            $email = Functions::escapeInput($_POST['email']);
+            $password = Functions::escapeInput($_POST['password']);
+            $gender = Functions::escapeInput($_POST['gender']);
+            $usn = Functions::escapeInput($_POST['usn']);
+            $college = Functions::escapeInput($_POST['college']);
+            $dept = Functions::escapeInput($_POST['dept']);
+            $sem = Functions::escapeInput($_POST['semester']);
+            $sec = Functions::escapeInput($_POST['section']);
+
+            try {
+                $user = new User();
+                $user->newUser($usn, $name, $email, $gender, $password, $college, $dept, $sem, $sec);
+                EasyHeaders::redirect('/?user-registered');
+            } catch (Exception $e) {
+                if ($e->getCode() === User::ERROR_INVALID_EMAIL || $e->getCode() === User::ERROR_EMAIL_EXISTS) {
+                    $error['email'] = $e->getMessage();
+                } elseif ($e->getCode() === User::ERROR_USN_EXISTS) {
+                    $error['usn'] = $e->getMessage();
+                }
+            }
+        } else {
+            $error['error'] = 'Fill all the fields.';
+        }
+
+        $twigData['error'] = $error;
+        echo $twig->render('user.register.twig', $twigData);
     });
 
 

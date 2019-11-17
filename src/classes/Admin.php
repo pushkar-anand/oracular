@@ -45,13 +45,14 @@ class Admin
         } catch (RowNotFoundException $e) {
             new Exception("The email/id doesn't is not registered");
         }
-
-        $this->adminID = $result[self::ADMIN_ID_FIELD];
-        $this->adminName = $result[self::ADMIN_NAME_FIELD];
-        $this->adminEmail = $result[self::ADMIN_EMAIL_FIELD];
-        $this->adminPassword = $result[self::ADMIN_PASS_FIELD];
-        $this->adminDept = $result[self::ADMIN_DEPT_FIELD];
-        $this->parseAdminData();
+        if ($result !== null) {
+            $this->adminID = $result[self::ADMIN_ID_FIELD];
+            $this->adminName = $result[self::ADMIN_NAME_FIELD];
+            $this->adminEmail = $result[self::ADMIN_EMAIL_FIELD];
+            $this->adminPassword = $result[self::ADMIN_PASS_FIELD];
+            $this->adminDept = $result[self::ADMIN_DEPT_FIELD];
+            $this->parseAdminData();
+        }
     }
 
     /**
@@ -86,6 +87,7 @@ class Admin
                 self::ADMIN_EMAIL_FIELD,
                 $adminEmail
             );
+            return $result;
         } catch (RowNotFoundException $e) {
             throw new RowNotFoundException();
         }

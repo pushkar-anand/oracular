@@ -77,7 +77,7 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
     margin: auto;
 }
 
-#admin-login-form {
+.form-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,7 +85,7 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
     min-height: 500px;
 }
 
-#admin-login-form .card .card-content {
+.form-wrapper .card .card-content {
     width: 500px;
 }
 

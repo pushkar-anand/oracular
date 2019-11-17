@@ -11,7 +11,7 @@
 {% block body %}
     {{ parent() }}
 
-    <div class="section" id="admin-login-form">
+    <div class="section form-wrapper" id="user-reg-form">
         {#        <div class="container">#}
         <form class="form" method="post" id="signup-form" action="{{ login_redirect }}">
             <div class="card">
@@ -37,7 +37,7 @@
                                class="validate {% if error.email %} {{ "invalid" }} {% endif %}"
                                autocomplete="email"
                                id="email" value=""/>
-                        <label for="name">Email</label>
+                        <label for="email">Email</label>
                         {% if error.email %}
                             <span class="helper-text" data-error="{{ error.email }}"></span>
                         {% else %}
@@ -60,15 +60,30 @@
                         <input type="password" name="r-password" required
                                class="validate {% if error.rpassword %} {{ "invalid" }} {% endif %}"
                                autocomplete="new-password"
-                               id="password"/>
+                               id="r-password"/>
                         <label for="r-password">Retype Password</label>
                         {% if error.rpassword %}
                             <span class="helper-text" data-error="{{ error.rpassword }}"></span>
                         {% endif %}
                     </div>
 
+                    <p>
+                        <label>
+                            <input class="with-gap" name="gender" type="radio" value="M"/>
+                            <span>Male</span>
+                        </label>
+                        <label>
+                            <input class="with-gap" name="gender" type="radio" value="F"/>
+                            <span>Female</span>
+                        </label>
+                        <label>
+                            <input class="with-gap" name="gender" type="radio" value="O"/>
+                            <span>Other</span>
+                        </label>
+                    </p>
+
                     <div class="input-field">
-                        <input type="number" name="usn" required
+                        <input type="text" name="usn" required
                                class="validate {% if error.usn %} {{ "invalid" }} {% endif %}"
                                id="usn"/>
                         <label for="usn">USN</label>
@@ -88,8 +103,8 @@
                     </div>
 
                     <div class="input-field col s12">
-                        <select id="dept" required>
-                            <option value="" disabled selected>Choose your option</option>
+                        <select id="dept" required name="dept">
+                            <option value="" disabled selected>Department</option>
                             {% for department in departments %}
                                 <option value="{{ department.deptID }}">{{ department.deptName }}</option>
                             {% endfor %}
