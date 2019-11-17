@@ -25,7 +25,7 @@ $router = new Route();
 try {
 
     $router->addMatch('GET', '/setup/first', function () use ($twig) {
-
+        echo $twig->render('setup.twig');
     });
 
     $router->addMatch('GET', '/', function () {
@@ -62,11 +62,11 @@ try {
                 EasyHeaders::redirect('/admin/dashboard');
             } else {
                 $data['error'] = array('password' => 'Incorrect Password.');
-                echo $twig->render('admin.login.twig', $data);
             }
         } catch (UserNotFoundException $e) {
             $data['error'] = array('email' => 'Email is not registered.');
         }
+        echo $twig->render('admin.login.twig', $data);
     });
 
     $router->execute();
