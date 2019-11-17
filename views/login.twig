@@ -1,0 +1,58 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}
+    Login
+{% endblock title %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="section" id="admin-login-form">
+        {#        <div class="container">#}
+        <form class="form" method="post" id="signup-form" action="{{ login_redirect }}">
+            <div class="card">
+                <div class="card-content">
+
+                    <span class="card-title">Login</span>
+
+                    <div class="input-field">
+                        <input type="email" name="email" required
+                               class="validate {% if error.email %} {{ "invalid" }} {% endif %}"
+                               autocomplete="email"
+                               id="email" value=""/>
+                        <label for="name">Email</label>
+                        {% if error.email %}
+                            <span class="helper-text" data-error="{{ error.email }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid email"></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field">
+                        <input type="password" name="password" required
+                               class="validate {% if error.password %} {{ "invalid" }} {% endif %}"
+                               autocomplete="password"
+                               id="password"/>
+                        <label for="password">Password</label>
+                        {% if error.password %}
+                            <span class="helper-text" data-error="{{ error.password }}"></span>
+                        {% endif %}
+                    </div>
+
+                    <br/>
+                    <div class="right-align">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {#        </div>#}
+    </div>
+
+{% endblock %}

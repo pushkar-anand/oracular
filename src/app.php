@@ -3,6 +3,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use EasyRoute\Route;
 use OracularApp\Config;
+use OracularApp\DataManager;
 use OracularApp\Exceptions\UserNotFoundException;
 use OracularApp\Logger;
 use OracularApp\Session;
@@ -28,12 +29,34 @@ try {
         echo $twig->render('setup.twig');
     });
 
-    $router->addMatch('GET', '/', function () {
-        global $twig;
+    $router->addMatch('GET', '/', function () use ($twig) {
         $twigData = array();
         appendEventsData($twigData);
         echo $twig->render('home.twig', $twigData);
     });
+
+    $router->addMatch('GET', '/login', function () use ($twig) {
+        $twigData = array();
+        $twigData['login_redirect'] = '/user/login';
+        echo $twig->render('login.twig', $twigData);
+    });
+
+    $router->addMatch('POST', '/user/login', function () use ($twig) {
+        $twigData = array();
+    });
+
+    $router->addMatch('GET', '/user/register', function () use ($twig) {
+        $dataManager = new DataManager(DataManager::DEPARTMENT);
+        $twigData = array();
+        $twigData['departments'] = $dataManager->getArrayData();
+        //var_dump($twigData);
+        echo $twig->render('user.register.twig', $twigData);
+    });
+
+    $router->addMatch('POST', '/user/register', function () use ($twig) {
+        $twigData = array();
+    });
+
 
     $router->addMatch('GET', '/admin/dashboard', function () use ($twig, $session) {
         if (!$session->isAdminLoggedIn()) {

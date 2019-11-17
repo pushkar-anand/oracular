@@ -19,3 +19,4 @@ function appendEventsData(array &$twigData)
         'Type' => $eventClassifier->getTypes()
     );
 }
+
