@@ -146,6 +146,16 @@ try {
         EasyHeaders::redirect('/');
     });
 
+    $router->addMatch('GET', '/user/dashboard', function () use ($twig, $session, $logger) {
+        if ($session->isUserLoggedIn() === false) {
+            EasyHeaders::redirect('/login');
+        }
+        $twigData = array();
+        $twigData['userLoggedIN'] = true;
+        appendUserData($twigData);
+        echo $twig->render('user.dashboard.twig', $twigData);
+    });
+
 
     $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
         redirectIfLoggedIN($session);

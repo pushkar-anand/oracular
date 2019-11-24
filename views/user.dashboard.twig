@@ -1,0 +1,13 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}
+    {{ user.name }}
+{% endblock title %}
+
+{% block body %}
+    {{ parent() }}
+{% endblock %}
