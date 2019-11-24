@@ -125,6 +125,23 @@ try {
         echo $twig->render('user.register.twig', $twigData);
     });
 
+    $router->addMatch('GET', '/event/register', function () use ($twig, $session, $logger) {
+        if ($session->isUserLoggedIn() === false) {
+            EasyHeaders::redirect('/login');
+        }
+        if (isset($_GET['id'])) {
+            $id = Functions::escapeInput($_GET['id']);
+            try {
+                $event = new Event($id);
+                $event->register($_SESSION[Session::SESSION_USER]);
+            } catch (Exception $e) {
+                $logger->pushToError("Event with $id does not exists.");
+                EasyHeaders::redirect('/');
+            }
+        }
+        EasyHeaders::redirect('/');
+    });
+
 
     $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
         redirectIfLoggedIN($session);

@@ -89,7 +89,12 @@
                         </div>
                         <div class="card-action center">
                             <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
-                            <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                            {% if not adminLoggedIN %}
+                                <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                            {% endif %}
+                            {% if admin.adminID == event.createdBy %}
+                                <a href="/event/edit?event={{ event.eventName }}&id={{ event.eventID }}">Edit</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -156,7 +161,12 @@
                         </div>
                         <div class="card-action center">
                             <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
-                            <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                            {% if not adminLoggedIN %}
+                                <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                            {% endif %}
+                            {% if admin.adminID == event.createdBy %}
+                                <a href="/event/edit?event={{ event.eventName }}&id={{ event.eventID }}">Edit</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

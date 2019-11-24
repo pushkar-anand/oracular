@@ -153,4 +153,10 @@ class Event
         }
     }
 
+    public function register(int $user_id)
+    {
+        $eventRegistration = new EventRegistration();
+        $eventRegistration->register($user_id, $this->eventID);
+    }
+
 }
