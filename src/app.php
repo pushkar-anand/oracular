@@ -2,10 +2,13 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use EasyRoute\Route;
+use OracularApp\Admin;
 use OracularApp\Config;
 use OracularApp\DataManager;
+use OracularApp\Department;
 use OracularApp\Event;
 use OracularApp\EventImageHelper;
+use OracularApp\EventType;
 use OracularApp\Exceptions\UserNotFoundException;
 use OracularApp\Logger;
 use OracularApp\Session;
@@ -44,6 +47,8 @@ try {
             appendAdminData($twigData);
         }
         appendEventsData($twigData);
+        $dataManager = new DataManager(DataManager::DEPARTMENT);
+        $twigData['departments'] = $dataManager->getArrayData();
         echo $twig->render('home.twig', $twigData);
     });
 
@@ -253,13 +258,29 @@ try {
         echo $twig->render('event.add.twig', $twigData);
     });
 
+    $router->addMatch('POST', '/event/type/new', function () use ($twig, $session) {
+        if ($session->isAdminLoggedIn() === false) {
+            EasyHeaders::unauthorized();
+        }
+        if (isset($_POST['event-type-name']) && isset($_POST['event-type-desc'])) {
+            $eventTypeName = Functions::escapeInput($_POST['event-type-name']);
+            $eventTypeDesc = Functions::escapeInput($_POST['event-type-desc']);
 
+            $eventType = new EventType();
+            $eventType->add($eventTypeName, getAcronym($eventTypeName), $eventTypeDesc);
+            EasyHeaders::redirect('/admin/dashboard');
+        }
+    });
 
     $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
         redirectIfLoggedIN($session);
         $twigData['login_text'] = 'Admin Login';
         $twigData['login_redirect'] = '/admin/login';
         echo $twig->render('login.twig', $twigData);
+    });
+
+    $router->addMatch('GET', '/admin/dashboard', function () use ($twig, $session) {
+        echo $twig->render('admin.dashboard.twig');
     });
 
     $router->addMatch('POST', '/admin/login', function () use ($twig, $session) {
@@ -285,11 +306,32 @@ try {
         if ($session->isAdminLoggedIn() === false && $session->isSuperAdmin() === false) {
             EasyHeaders::unauthorized();
         }
+        if (isset($_POST['admin-name']) &&
+            isset($_POST['admin-email']) &&
+            isset($_POST['admin-dept']) &&
+            isset($_POST['admin-pass']) &&
+            isset($_POST['admin-level'])) {
+            $adminName = Functions::escapeInput($_POST['admin-name']);
+            $adminEmail = Functions::escapeInput($_POST['admin-email']);
+            $adminPassword = Functions::escapeInput($_POST['admin-pass']);
+            $adminDept = Functions::escapeInput($_POST['admin-dept']);
+            $adminLevel = Functions::escapeInput($_POST['admin-level']);
+
+            $admin = new Admin();
+            $admin->newAdmin($adminName, $adminEmail, $adminPassword, $adminDept, $adminLevel);
+            EasyHeaders::redirect('/admin/dashboard');
+        }
     });
 
     $router->addMatch('POST', '/department/new', function () use ($session) {
         if ($session->isAdminLoggedIn() === false && $session->isMidAdmin() === false) {
             EasyHeaders::unauthorized();
+        }
+        if (isset($_POST['dept-name'])) {
+            $deptName = Functions::escapeInput($_POST['dept-name']);
+            $department = new Department();
+            $department->add($deptName, getAcronym($deptName));
+            EasyHeaders::redirect('/admin/dashboard');
         }
     });
 

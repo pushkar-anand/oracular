@@ -109,7 +109,8 @@ class Admin
             self::ADMIN_NAME_FIELD,
             self::ADMIN_EMAIL_FIELD,
             self::ADMIN_PASS_FIELD,
-            self::ADMIN_DEPT_FIELD
+            self::ADMIN_DEPT_FIELD,
+            self::ADMIN_LEVEL_FIELD
         );
 
         $hashed_pwd = password_hash($adminPassword, PASSWORD_DEFAULT);
@@ -119,7 +120,7 @@ class Admin
             $id = $this->oracularDB->dbConnection->insert(
                 self::ADMIN_TABLE_NAME,
                 $fields,
-                'sssi',
+                'sssis',
                 $adminName, $adminEmail, $hashed_pwd, $adminDept, $adminLevel
             );
 

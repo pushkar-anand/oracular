@@ -57,3 +57,16 @@ function addTwigCustomFunctions(Environment &$twig)
     $twig->addFunction($checkRegTwigFunction);
 }
 
+function getAcronym(string $string): string
+{
+    $words = preg_split("/\s+/", $string);
+    $acronym = "";
+
+    foreach ($words as $w) {
+        if (ctype_alpha($w)) {
+            $acronym .= $w[0];
+        }
+    }
+    return strtoupper($acronym);
+}
+
