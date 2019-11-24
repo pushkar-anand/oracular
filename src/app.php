@@ -6,7 +6,6 @@ use OracularApp\Config;
 use OracularApp\DataManager;
 use OracularApp\Event;
 use OracularApp\EventImageHelper;
-use OracularApp\EventRegistration;
 use OracularApp\Exceptions\UserNotFoundException;
 use OracularApp\Logger;
 use OracularApp\Session;
@@ -15,7 +14,6 @@ use PhpUseful\EasyHeaders;
 use PhpUseful\Functions;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Twig\TwigFunction;
 
 Config::setDefaults();
 
@@ -25,13 +23,7 @@ $logger = Logger::getLogger();
 
 $loader = new FilesystemLoader(__DIR__ . '/../views');
 $twig = new Environment($loader);
-$checkRegTwigFunction = new TwigFunction('userRegisteredForEvent', function (string $eventID, string $userID = null) {
-    if ($userID === null) {
-        return false;
-    }
-    return EventRegistration::isUserRegistered($eventID, $userID);
-});
-$twig->addFunction($checkRegTwigFunction);
+addTwigCustomFunctions($twig);
 
 $router = new Route();
 

@@ -4,9 +4,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use OracularApp\Admin;
 use OracularApp\DataManager;
 use OracularApp\EventClassifier;
+use OracularApp\EventRegistration;
 use OracularApp\Session;
 use OracularApp\User;
 use PhpUseful\EasyHeaders;
+use Twig\Environment;
+use Twig\TwigFunction;
 
 function appendEventsData(array &$twigData)
 {
@@ -41,5 +44,16 @@ function redirectIfLoggedIN(Session $session)
     if ($session->isUserLoggedIn() || $session->isAdminLoggedIn()) {
         EasyHeaders::redirect('/?user-logged-in');
     }
+}
+
+function addTwigCustomFunctions(Environment &$twig)
+{
+    $checkRegTwigFunction = new TwigFunction('userRegisteredForEvent', function (string $eventID, string $userID = null) {
+        if ($userID === null) {
+            return false;
+        }
+        return EventRegistration::isUserRegistered($eventID, $userID);
+    });
+    $twig->addFunction($checkRegTwigFunction);
 }
 
