@@ -4,6 +4,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use EasyRoute\Route;
 use OracularApp\Config;
 use OracularApp\DataManager;
+use OracularApp\Event;
+use OracularApp\EventImageHelper;
 use OracularApp\Exceptions\UserNotFoundException;
 use OracularApp\Logger;
 use OracularApp\Session;
@@ -47,12 +49,14 @@ try {
     $router->addMatch('GET', '/login', function () use ($twig, $session) {
         redirectIfLoggedIN($session);
         $twigData = array();
+        $twigData['login_text'] = 'Login';
         $twigData['login_redirect'] = '/user/login';
         echo $twig->render('login.twig', $twigData);
     });
 
     $router->addMatch('POST', '/user/login', function () use ($twig, $session) {
         $twigData = array();
+        $twigData['login_text'] = 'Login';
         $twigData['login_redirect'] = '/user/login';
         $email = Functions::escapeInput($_POST['email']);
         $password = Functions::escapeInput($_POST['password']);
@@ -124,12 +128,14 @@ try {
 
     $router->addMatch('GET', '/admin/login', function () use ($twig, $session) {
         redirectIfLoggedIN($session);
+        $twigData['login_text'] = 'Admin Login';
         $twigData['login_redirect'] = '/admin/login';
         echo $twig->render('login.twig', $twigData);
     });
 
     $router->addMatch('POST', '/admin/login', function () use ($twig, $session) {
         $data = array();
+        $data['login_text'] = 'Admin Login';
         $data['login_redirect'] = '/admin/login';
         $email = Functions::escapeInput($_POST['email']);
         $password = Functions::escapeInput($_POST['password']);
@@ -157,14 +163,65 @@ try {
         echo $twig->render('event.add.twig', $twigData);
     });
 
-    $router->addMatch('POST', '/event/new', function () use ($twig, $session) {
+    $router->addMatch('POST', '/event/new', function () use ($twig, $session, $logger) {
         if ($session->isAdminLoggedIn() === false) {
             EasyHeaders::redirect('/admin/login');
         }
         $twigData = array();
         appendAdminData($twigData);
+        //var_dump($_POST);
+        //var_dump($_FILES['event-img']);
         $error = array();
-        if (isset($_POST[''])) {
+        //var_dump($twigData);
+        if (
+            isset($_POST['event-name']) &&
+            isset($_POST['event-type']) &&
+            isset($_POST['event-start-date']) &&
+            isset($_POST['event-start-time']) &&
+            isset($_POST['event-end-date']) &&
+            isset($_POST['event-end-time']) &&
+            isset($_POST['event-venue']) &&
+            isset($_POST['event-desc']) &&
+            isset($_FILES['event-img'])) {
+
+            $startDateTimeStr = Functions::escapeInput($_POST['event-start-date']) . ' ' . Functions::escapeInput($_POST['event-start-time']);
+            $startTimestamp = strtotime($startDateTimeStr);
+
+            $endDateTimeStr = Functions::escapeInput($_POST['event-end-date']) . ' ' . Functions::escapeInput($_POST['event-end-time']);
+            $endTimeStamp = strtotime($endDateTimeStr);
+
+            if ($endTimeStamp <= $startTimestamp) {
+                $error['eventEndDate'] = 'Event end cannot be less or equal to event start.';
+                $error['eventEndTime'] = 'Event end cannot be less or equal to event start.';
+            }
+            $eventName = Functions::escapeInput($_POST['event-name']);
+            $eventType = Functions::escapeInput($_POST['event-type']);
+            $startDateTime = date('Y-m-d H:i:s', $startTimestamp);
+            $endDateTime = date('Y-m-d H:i:s', $endTimeStamp);
+            $eventVenue = Functions::escapeInput($_POST['event-venue']);
+            $eventDesc = Functions::escapeInput($_POST['event-desc']);
+            $eventImg = new EventImageHelper($_FILES['event-img']);
+
+            $eventDept = $twigData['admin']->adminDept;
+            $eventOwner = $_SESSION[Session::SESSION_ADMIN];
+
+            try {
+                $event = new Event();
+                $event->newEvent(
+                    $eventName,
+                    $eventDesc,
+                    $eventType,
+                    $startDateTime,
+                    $endDateTime,
+                    $eventDept,
+                    $eventVenue,
+                    $eventImg->getImageBlob(),
+                    $eventOwner
+                );
+            } catch (Exception $e) {
+                $logger->pushToError($e);
+            }
+
 
         } else {
             $error['error'] = 'Fill all the fields.';

@@ -5,6 +5,7 @@ namespace OracularApp;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Exception;
+use PhpUseful\Exception\RowNotFoundException;
 
 class Event
 {
@@ -19,6 +20,7 @@ class Event
     public const EVENT_END_TIME_FIELD = 'event_end_time';
     public const EVENT_DEPT_FIELD = 'dept';
     public const EVENT_VENUE_FIELD = 'venue';
+    public const EVENT_CREATED_BY_FIELD = 'created_by';
 
     public $eventID;
     public $eventName;
@@ -32,6 +34,7 @@ class Event
     public $year;
     public $eventDept;
     public $eventVenue;
+    public $createdBy;
 
     public $eventDeptOBJ;
     public $eventTypeOBJ;
@@ -39,17 +42,26 @@ class Event
     private $oracularDB;
     private $logger;
 
+    /**
+     * Event constructor.
+     * @param int|null $eventID
+     * @throws RowNotFoundException
+     */
     public function __construct($eventID = null)
     {
         $this->oracularDB = OracularDB::getDB();
         $this->logger = Logger::getLogger();
 
         if ($eventID != null) {
-            $result = $this->oracularDB->dbConnection->fetchRow(
-                self::EVENTS_TABLE_NAME,
-                self::EVENT_ID_FIELD,
-                $eventID
-            );
+            try {
+                $result = $this->oracularDB->dbConnection->fetchRow(
+                    self::EVENTS_TABLE_NAME,
+                    self::EVENT_ID_FIELD,
+                    $eventID
+                );
+            } catch (RowNotFoundException $e) {
+                throw new RowNotFoundException("Event does not exists");
+            }
             $this->eventID = $result[self::EVENT_ID_FIELD];
             $this->eventName = $result[self::EVENT_NAME_FIELD];
             $this->eventDesc = $result[self::EVENT_DESC_FIELD];
@@ -59,6 +71,7 @@ class Event
             $this->eventEndTime = $result[self::EVENT_END_TIME_FIELD];
             $this->eventDept = $result[self::EVENT_DEPT_FIELD];
             $this->eventVenue = $result[self::EVENT_VENUE_FIELD];
+            $this->createdBy = $result[self::EVENT_CREATED_BY_FIELD];
 
             $this->parseEventData();
         }
@@ -84,6 +97,11 @@ class Event
         $this->eventHumanReadableEndTime = date('d-M-y', $dt);
     }
 
+    private function encodeIMG()
+    {
+        $this->eventIMG = base64_encode($this->eventIMG);
+    }
+
     public function newEvent(
         string $eventName,
         string $eventDesc,
@@ -92,7 +110,8 @@ class Event
         string $eventEndTime,
         string $eventDept,
         string $eventVenue,
-        string $eventIMG
+        string $eventIMG,
+        string $createdBy
     )
     {
         $fields = array(
@@ -103,37 +122,35 @@ class Event
             self::EVENT_END_TIME_FIELD,
             self::EVENT_DEPT_FIELD,
             self::EVENT_VENUE_FIELD,
-            self::EVENT_IMG_FIELD
+            self::EVENT_IMG_FIELD,
+            self::EVENT_CREATED_BY_FIELD
         );
 
         try {
-            $id = $this->oracularDB->dbConnection->insert(
-                self::EVENTS_TABLE_NAME,
-                $fields,
-                "ssississ",
-                $eventName, $eventDesc, $eventType, $eventStartTime, $eventEndTime, $eventDept, $eventVenue, $eventIMG
-            );
-
-            $this->eventID = $id;
-            $this->eventName = $eventName;
-            $this->eventDesc = $eventDesc;
-            $this->eventIMG = $eventIMG;
-            $this->eventType = $eventType;
-            $this->eventStartTime = $eventStartTime;
-            $this->eventEndTime = $eventEndTime;
-            $this->eventDept = $eventDept;
-            $this->eventVenue = $eventVenue;
-
-            $this->parseEventData();
-
+            $query = "INSERT INTO Events (event_name, event_desc, event_type, event_start_time, event_end_time, dept, venue, event_img, created_by) VALUES (?,?,?,?,?,?,?,?,?)";
+            $stmt = $this->oracularDB->dbConnection->getConn()->prepare($query);
+            $null = NULL;
+            $stmt->bind_param('ssissisbi', $eventName, $eventDesc, $eventType, $eventStartTime, $eventEndTime, $eventDept, $eventVenue, $null, $createdBy);
+            $stmt->send_long_data(7, $eventIMG);
+            if ($stmt->execute() === false) {
+                $this->logger->pushToCritical('Error inserting data. ' . $stmt->error);
+            } else {
+                $id = $this->oracularDB->dbConnection->getConn()->insert_id;
+                $this->eventID = $id;
+                $this->eventName = $eventName;
+                $this->eventDesc = $eventDesc;
+                $this->eventIMG = $eventIMG;
+                $this->eventType = $eventType;
+                $this->eventStartTime = $eventStartTime;
+                $this->eventEndTime = $eventEndTime;
+                $this->eventDept = $eventDept;
+                $this->eventVenue = $eventVenue;
+                $this->createdBy = $createdBy;
+                $this->parseEventData();
+            }
         } catch (Exception $e) {
             $this->logger->pushToError($e);
         }
-    }
-
-    private function encodeIMG()
-    {
-        $this->eventIMG = base64_encode($this->eventIMG);
     }
 
 }

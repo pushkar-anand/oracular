@@ -14,7 +14,7 @@
 
     <div class="section form-wrapper">
         {#        <div class="container">#}
-        <form class="form" method="post" id="signup-form" action="{{ login_redirect }}">
+        <form class="form" method="post" id="event-form" action="/event/new" enctype="multipart/form-data">
             <div class="card">
                 <div class="card-content">
 
@@ -23,7 +23,6 @@
                     <div class="input-field">
                         <input type="text" name="event-name" required
                                class="validate {% if error.eventName %} {{ "invalid" }} {% endif %}"
-                               autocomplete="email"
                                id="event-name" value=""/>
                         <label for="event-name">Event Name</label>
                         {% if error.eventName %}
@@ -81,7 +80,7 @@
 
                     <div class="input-field col s12">
                         <input type="text" name="event-end-time" required
-                               class="timepicker validate {% if error.eventStartTime %} {{ "invalid" }} {% endif %}"
+                               class="timepicker validate {% if error.eventEndTime %} {{ "invalid" }} {% endif %}"
                                id="event-end-time" value=""/>
                         <label for="event-end-time">Event End Time</label>
                         {% if error.eventEndTime %}
