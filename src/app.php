@@ -148,7 +148,7 @@ try {
 
     $router->addMatch('GET', '/event/new', function () use ($twig, $session) {
         if ($session->isAdminLoggedIn() === false) {
-            EasyHeaders::unauthorized();
+            EasyHeaders::redirect('/admin/login');
         }
         $dataManager = new DataManager(DataManager::EVENT_TYPE);
         $twigData = array();
@@ -159,7 +159,7 @@ try {
 
     $router->addMatch('POST', '/event/new', function () use ($twig, $session) {
         if ($session->isAdminLoggedIn() === false) {
-            EasyHeaders::unauthorized();
+            EasyHeaders::redirect('/admin/login');
         }
         $twigData = array();
         appendAdminData($twigData);

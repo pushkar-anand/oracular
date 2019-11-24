@@ -64,6 +64,26 @@ class Event
         }
     }
 
+    private function parseEventData()
+    {
+        $this->saveHumanReadableDate();
+        $dt = strtotime($this->eventStartTime);
+        $this->year = date('Y', $dt);
+
+        $this->eventDeptOBJ = new Department($this->eventDept);
+        $this->eventTypeOBJ = new EventType($this->eventType);
+        $this->encodeIMG();
+    }
+
+    private function saveHumanReadableDate()
+    {
+        $dt = strtotime($this->eventStartTime);
+        $this->eventHumanReadableStartTime = date('d-M-y', $dt);
+
+        $dt = strtotime($this->eventEndTime);
+        $this->eventHumanReadableEndTime = date('d-M-y', $dt);
+    }
+
     public function newEvent(
         string $eventName,
         string $eventDesc,
@@ -72,7 +92,7 @@ class Event
         string $eventEndTime,
         string $eventDept,
         string $eventVenue,
-        string $eventIMG = 'default-banner.jpg'
+        string $eventIMG
     )
     {
         $fields = array(
@@ -111,24 +131,9 @@ class Event
         }
     }
 
-    private function parseEventData()
+    private function encodeIMG()
     {
-        $this->saveHumanReadableDate();
-        $dt = strtotime($this->eventStartTime);
-        $this->year = date('Y', $dt);
-
-        $this->eventDeptOBJ = new Department($this->eventDept);
-        $this->eventTypeOBJ = new EventType($this->eventType);
-
-    }
-
-    private function saveHumanReadableDate()
-    {
-        $dt = strtotime($this->eventStartTime);
-        $this->eventHumanReadableStartTime = date('d-M-y', $dt);
-
-        $dt = strtotime($this->eventEndTime);
-        $this->eventHumanReadableEndTime = date('d-M-y', $dt);
+        $this->eventIMG = base64_encode($this->eventIMG);
     }
 
 }

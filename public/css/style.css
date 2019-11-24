@@ -97,3 +97,6 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
     background-color: var(--theme-color-dark);
 }
 
+.page-footer {
+    background-color: var(--theme-color);
+}
