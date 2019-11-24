@@ -1,0 +1,155 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+    {#    <link rel="stylesheet" href="https://cdn.rawgit.com/chingyawhao/materialize-clockpicker/master/dist/css/materialize.clockpicker.css"/>#}
+{% endblock %}
+
+{% block title %}
+    Add Event - Oracular
+{% endblock title %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="section form-wrapper">
+        {#        <div class="container">#}
+        <form class="form" method="post" id="signup-form" action="{{ login_redirect }}">
+            <div class="card">
+                <div class="card-content">
+
+                    <span class="card-title">New Event</span>
+
+                    <div class="input-field">
+                        <input type="text" name="event-name" required
+                               class="validate {% if error.eventName %} {{ "invalid" }} {% endif %}"
+                               autocomplete="email"
+                               id="event-name" value=""/>
+                        <label for="event-name">Event Name</label>
+                        {% if error.eventName %}
+                            <span class="helper-text" data-error="{{ error.eventName }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event name."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <select id="event-type" required name="event-type">
+                            <option value="" disabled selected>Event Type</option>
+                            {% for eventType in eventTypes %}
+                                <option value="{{ eventType.eventTypeID }}">{{ eventType.eventTypeName }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="event-type">Event Type</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-start-date" required
+                               class="datepicker validate {% if error.eventStartDate %} {{ "invalid" }} {% endif %}"
+                               id="event-start-date" value=""/>
+                        <label for="event-start-date">Event Start Date</label>
+                        {% if error.eventStartDate %}
+                            <span class="helper-text" data-error="{{ error.eventStartDate }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event date."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-start-time" required
+                               class="timepicker validate {% if error.eventStartTime %} {{ "invalid" }} {% endif %}"
+                               id="event-start-time" value=""/>
+                        <label for="event-start-time">Event Start Time</label>
+                        {% if error.eventStartTime %}
+                            <span class="helper-text" data-error="{{ error.eventStartTime }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event time."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-end-date" required
+                               class="datepicker validate {% if error.eventEndDate %} {{ "invalid" }} {% endif %}"
+                               id="event-end-date" value=""/>
+                        <label for="event-end-date">Event End Date</label>
+                        {% if error.eventEndDate %}
+                            <span class="helper-text" data-error="{{ error.eventEndDate }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event date."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-end-time" required
+                               class="timepicker validate {% if error.eventStartTime %} {{ "invalid" }} {% endif %}"
+                               id="event-end-time" value=""/>
+                        <label for="event-end-time">Event End Time</label>
+                        {% if error.eventEndTime %}
+                            <span class="helper-text" data-error="{{ error.eventEndTime }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event time."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field">
+                        <input type="text" name="event-venue" required
+                               class="validate {% if error.eventVenue %} {{ "invalid" }} {% endif %}"
+                               id="event-venue" value=""/>
+                        <label for="event-venue">Event Venue</label>
+                        {% if error.eventVenue %}
+                            <span class="helper-text" data-error="{{ error.eventVenue }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event venue."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <textarea id="event-desc" class="materialize-textarea" name="event-desc"></textarea>
+                        <label for="event-desc">Event Description</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>File</span>
+                                <input type="file" name="event-img" accept="image/*"/>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        {% if error.eventIMG %}
+                            <span class="helper-text" data-error="{{ error.eventIMG }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event image."></span>
+                        {% endif %}
+                    </div>
+
+
+                    <br/>
+                    <div class="right-align">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {#        </div>#}
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    {#    <script src="https://cdn.rawgit.com/chingyawhao/materialize-clockpicker/master/dist/js/materialize.clockpicker.js"></script>#}
+    <script>
+        $(document).ready(function () {
+            $('select').formSelect();
+            $('.datepicker').datepicker({
+                minDate: new Date((new Date()).getTime() + (60 * 60 * 24 * 1000))
+            });
+            $('.timepicker').timepicker();
+        });
+    </script>
+{% endblock %}

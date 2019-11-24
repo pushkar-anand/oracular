@@ -150,8 +150,10 @@ try {
         if ($session->isAdminLoggedIn() === false) {
             EasyHeaders::unauthorized();
         }
+        $dataManager = new DataManager(DataManager::EVENT_TYPE);
         $twigData = array();
         appendAdminData($twigData);
+        $twigData['eventTypes'] = $dataManager->getArrayData();
         echo $twig->render('event.add.twig', $twigData);
     });
 
