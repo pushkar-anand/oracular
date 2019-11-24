@@ -153,10 +153,15 @@ class Event
         }
     }
 
-    public function register(int $user_id)
+    public function register(int $userID)
     {
         $eventRegistration = new EventRegistration();
-        $eventRegistration->register($user_id, $this->eventID);
+        $eventRegistration->register($userID, $this->eventID);
+    }
+
+    public function isUserRegistered(int $userID)
+    {
+        return EventRegistration::isUserRegistered($this->eventID, $userID);
     }
 
 }

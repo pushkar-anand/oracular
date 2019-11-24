@@ -114,5 +114,16 @@ class EventRegistration
         $this->updateField(self::RSVP_FIELD, $rsvp);
     }
 
+    public static function isUserRegistered(int $eventID, int $userID): bool
+    {
+        $query = 'SELECT * FROM ' . self::EVENTS_REG_TABLE_NAME .
+            ' WHERE ' . self::EVENT_ID_FIELD . ' = ? AND ' . self::USER_ID_FIELD . ' = ?';
+        $stmt = OracularDB::getDB()->dbConnection->getConn()->prepare($query);
+        $stmt->bind_param('ii', $eventID, $userID);
+        $stmt->execute();
+        $stmt->store_result();
+        return ($stmt->num_rows != 0);
+    }
+
 
 }

@@ -6,6 +6,7 @@ use OracularApp\Config;
 use OracularApp\DataManager;
 use OracularApp\Event;
 use OracularApp\EventImageHelper;
+use OracularApp\EventRegistration;
 use OracularApp\Exceptions\UserNotFoundException;
 use OracularApp\Logger;
 use OracularApp\Session;
@@ -14,6 +15,7 @@ use PhpUseful\EasyHeaders;
 use PhpUseful\Functions;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 Config::setDefaults();
 
@@ -23,6 +25,13 @@ $logger = Logger::getLogger();
 
 $loader = new FilesystemLoader(__DIR__ . '/../views');
 $twig = new Environment($loader);
+$checkRegTwigFunction = new TwigFunction('userRegisteredForEvent', function (string $eventID, string $userID = null) {
+    if ($userID === null) {
+        return false;
+    }
+    return EventRegistration::isUserRegistered($eventID, $userID);
+});
+$twig->addFunction($checkRegTwigFunction);
 
 $router = new Route();
 
@@ -130,10 +139,13 @@ try {
             EasyHeaders::redirect('/login');
         }
         if (isset($_GET['id'])) {
+            $userID = $_SESSION[Session::SESSION_USER];
             $id = Functions::escapeInput($_GET['id']);
             try {
                 $event = new Event($id);
-                $event->register($_SESSION[Session::SESSION_USER]);
+                if ($event->isUserRegistered($userID) === false) {
+                    $event->register($userID);
+                }
             } catch (Exception $e) {
                 $logger->pushToError("Event with $id does not exists.");
                 EasyHeaders::redirect('/');

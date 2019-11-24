@@ -90,7 +90,12 @@
                         <div class="card-action center">
                             <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
                             {% if not adminLoggedIN %}
-                                <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                                {% if not userRegisteredForEvent(event.eventID, user.userID) %}
+                                    <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}"
+                                       class="event-register">Register</a>
+                                {% else %}
+                                    <a href="#" class="event-registered">Registered</a>
+                                {% endif %}
                             {% endif %}
                             {% if admin.adminID == event.createdBy %}
                                 <a href="/event/edit?event={{ event.eventName }}&id={{ event.eventID }}">Edit</a>
@@ -162,7 +167,12 @@
                         <div class="card-action center">
                             <a href="/event/details?event={{ event.eventName }}&id={{ event.eventID }}">Details</a>
                             {% if not adminLoggedIN %}
-                                <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}">Register</a>
+                                {% if not userRegisteredForEvent(event.eventID, user.userID) %}
+                                    <a href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}"
+                                       class="event-register">Register</a>
+                                {% else %}
+                                    <a href="#" class="event-registered">Registered</a>
+                                {% endif %}
                             {% endif %}
                             {% if admin.adminID == event.createdBy %}
                                 <a href="/event/edit?event={{ event.eventName }}&id={{ event.eventID }}">Edit</a>
