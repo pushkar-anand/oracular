@@ -12,6 +12,10 @@ nav {
     background-color: var(--theme-color);
 }
 
+.btn:hover {
+    background-color: var(--theme-color-dark);
+}
+
 .filter-opt {
 
 }
@@ -99,4 +103,8 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
 
 .page-footer {
     background-color: var(--theme-color);
+}
+
+.title {
+    font-weight: bolder;
 }

@@ -10,4 +10,33 @@
 
 {% block body %}
     {{ parent() }}
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1>{{ event.eventName }}</h1>
+            </div>
+            <div class="row">
+                <div class="col s12 m8">
+                    <img class="responsive-img activator event-banner"
+                         src="data:image/jpeg;base64,{{ event.eventIMG }}" alt="{{ event.eventName }} Banner"/>
+                </div>
+                <div class="col s12 m4">
+                    <p class=" flow-text event-description"> {{ event.eventDesc }} </p>
+                    <p><span class="title">Department: </span> {{ event.eventDept }} </p>
+                    <p><span class="title">Venue: </span> {{ event.eventVenue }} </p>
+                    <p><span class="title">Starts: </span> {{ event.eventHumanReadableStartTime }} </p>
+                    <p><span class="title">Ends: </span> {{ event.eventHumanReadableEndTime }} </p>
+
+                    {% if not userRegisteredForEvent(event.eventID, user.userID) %}
+                        <a class="btn" href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}"
+                           class="event-register">Register</a>
+                    {% else %}
+                        <a class="event-registered">Registered</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

@@ -91,10 +91,10 @@ class Event
     private function saveHumanReadableDate()
     {
         $dt = strtotime($this->eventStartTime);
-        $this->eventHumanReadableStartTime = date('d-M-y', $dt);
+        $this->eventHumanReadableStartTime = date('d-M-y h:m a ', $dt);
 
         $dt = strtotime($this->eventEndTime);
-        $this->eventHumanReadableEndTime = date('d-M-y', $dt);
+        $this->eventHumanReadableEndTime = date('d-M-y h:m a', $dt);
     }
 
     private function encodeIMG()
