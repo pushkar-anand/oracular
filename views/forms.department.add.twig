@@ -1,0 +1,17 @@
+<div id="add-dept" class="modal">
+    <form method="post" action="/department/new">
+        <div class="modal-content">
+            <h4>Add Department</h4>
+            <p>Add a new department</p><br/>
+            <div class="input-field">
+                <input placeholder="Department Name" id="dept-name" name="dept-name" type="text"
+                       class="validate" required pattern="^[a-zA-Z-][a-zA-Z &]*$">
+                <label for="dept-name">Department Name</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-close waves-effect waves-green btn-flat">dismiss</a>
+            <button class="btn" type="submit">Add</button>
+        </div>
+    </form>
+</div>

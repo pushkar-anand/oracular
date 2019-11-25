@@ -11,6 +11,8 @@ class DataManager
     public const EVENT = 100;
     public const EVENT_TYPE = 101;
     public const DEPARTMENT = 102;
+    public const ADMIN = 103;
+    public const USER = 104;
 
     private const TABLE_NAME_KEY = 'tableName';
     private const TABLE_PRIMARY_FIELD_KEY = 'primaryKey';
@@ -58,7 +60,12 @@ class DataManager
                     self::TABLE_NAME_KEY => Department::DEPARTMENT_TABLE_NAME,
                     self::TABLE_PRIMARY_FIELD_KEY => Department::DEPT_ID_FIELD
                 );
-
+                break;
+            case self::ADMIN:
+                $this->tableData = array(
+                    self::TABLE_NAME_KEY => Admin::ADMIN_TABLE_NAME,
+                    self::TABLE_PRIMARY_FIELD_KEY => Admin::ADMIN_ID_FIELD
+                );
                 break;
             default:
                 throw new Exception("Couldn't initiate class. Invalid type supplied.");
@@ -85,10 +92,10 @@ class DataManager
 
     /**
      * @param $row
-     * @return Department|Event|EventType
+     * @return Department|Event|EventType|Admin
      * @throws Exception
      */
-    private function makeObject($row)
+    private function makeObject($row): object
     {
         $id = $row[$this->tableData[self::TABLE_PRIMARY_FIELD_KEY]];
 
@@ -104,6 +111,9 @@ class DataManager
 
             case self::DEPARTMENT:
                 return new Department($id);
+                break;
+            case self::ADMIN:
+                return new Admin($id);
                 break;
             default:
                 throw new Exception("Invalid OBJ creation");

@@ -57,7 +57,7 @@ class EventClassifier
 
     public function getClassifiedEvents(): array
     {
-        return array('upcoming' => $this->upcoming, 'past' => $this->past);
+        return array('upcoming' => $this->upcoming, 'past' => $this->past, 'all' => array_merge($this->upcoming, $this->past));
     }
 
     public function getYears(): array

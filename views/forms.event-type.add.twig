@@ -1,0 +1,22 @@
+<div id="add-event-type" class="modal">
+    <form method="post" action="/event/type/new">
+        <div class="modal-content">
+            <h4>Add Event Type</h4>
+            <p>Add a new Event Type.</p><br/>
+            <div class="input-field">
+                <input placeholder="Event Type Name" id="event-type-name" name="event-type-name" type="text"
+                       class="validate" required>
+                <label for="event-type-name">Event Type Name</label>
+            </div>
+            <div class="input-field">
+                <input placeholder="Event Type Description" id="event-type-desc" name="event-type-desc"
+                       type="text" class="validate" required>
+                <label for="event-type-desc">Event Type Description</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-close waves-effect waves-green btn-flat">dismiss</a>
+            <button class="btn" type="submit">Add</button>
+        </div>
+    </form>
+</div>

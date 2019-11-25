@@ -27,6 +27,7 @@ $logger = Logger::getLogger();
 $loader = new FilesystemLoader(__DIR__ . '/../views');
 $twig = new Environment($loader);
 addTwigCustomFunctions($twig);
+addTwigCustomFilters($twig);
 
 $router = new Route();
 
@@ -280,7 +281,17 @@ try {
     });
 
     $router->addMatch('GET', '/admin/dashboard', function () use ($twig, $session) {
-        echo $twig->render('admin.dashboard.twig');
+        if ($session->isAdminLoggedIn() === false) {
+            EasyHeaders::redirect('/admin/login');
+        }
+        $twigData = array();
+        appendAdminData($twigData);
+        appendEventsData($twigData);
+        appendDepartmentList($twigData);
+        appendEventTypeList($twigData);
+        appendAdminList($twigData);
+        $twigData['adminLoggedIN'] = true;
+        echo $twig->render('admin.dashboard.twig', $twigData);
     });
 
     $router->addMatch('POST', '/admin/login', function () use ($twig, $session) {

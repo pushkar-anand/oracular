@@ -1,0 +1,136 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}
+    Dashboard :: {{ admin.adminName }}
+{% endblock title %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1>Welcome {{ admin.adminName|first_word }}, </h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 m4">
+                <a href="/">
+                    <div class="card blue darken-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">Events</span>
+                            <p>Check all events.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% if admin.adminLevel == "mid" or admin.adminLevel == "super" %}
+                <div class="col s12 m4">
+                    <a href="#dept-list" class="modal-trigger">
+                        <div class="card blue darken-1">
+                            <div class="card-content white-text">
+                                <span class="card-title">Departments</span>
+                                <p>Check all Departments.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col s12 m4">
+                    <a href="#event-type-list" class="modal-trigger">
+                        <div class="card blue darken-1">
+                            <div class="card-content white-text">
+                                <span class="card-title">Event Types</span>
+                                <p>Check all event types.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if admin.adminLevel == "super" %}
+                <div class="col s12 m4">
+                    <a href="#admin-list" class="modal-trigger">
+                        <div class="card blue darken-1">
+                            <div class="card-content white-text">
+                                <span class="card-title">Admins</span>
+                                <p>Check list of all admins</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if admin.adminLevel == "mid" or admin.adminLevel == "super" %}
+        <div id="dept-list" class="modal">
+            <div class="modal-content">
+                <h4>Departments</h4>
+                <ul class="collection">
+                    {% for department in departments %}
+                        <li class="collection-item">
+                            {{ department.deptName|raw }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">dismiss</a>
+                <a href="#add-dept" class="modal-trigger">
+                    <button class="btn modal-close" type="button">Add Department</button>
+                </a>
+            </div>
+        </div>
+        <div id="event-type-list" class="modal">
+            <div class="modal-content">
+                <h4>Event Types</h4>
+                <ul class="collection">
+                    {% for eventType in eventTypes %}
+                        <li class="collection-item">{{ eventType.eventTypeName }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">dismiss</a>
+                <a href="#add-event-type" class="modal-trigger">
+                    <button class="btn modal-close" type="button">Add More</button>
+                </a>
+            </div>
+        </div>
+        {% include 'forms.event-type.add.twig' %}
+        {% include 'forms.department.add.twig' %}
+    {% endif %}
+    {% if admin.adminLevel == "super" %}
+        <div id="admin-list" class="modal">
+            <div class="modal-content">
+                <h4>Admins</h4>
+                <ul class="collection">
+                    {% for admin in admins %}
+                        <li class="collection-item">{{ admin.adminName }} : {{ admin.adminDeptObj.deptShortName }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-green btn-flat">dismiss</a>
+                <a href="#add-admin" class="modal-trigger">
+                    <button class="btn modal-close" type="button">Add Admin</button>
+                </a>
+            </div>
+        </div>
+        {% include 'forms.admin.add.twig' %}
+    {% endif %}
+
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $(document).ready(() => {
+            $('.modal').modal();
+            $('select').formSelect();
+        });
+    </script>
+{% endblock %}

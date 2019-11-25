@@ -9,6 +9,7 @@ use OracularApp\Session;
 use OracularApp\User;
 use PhpUseful\EasyHeaders;
 use Twig\Environment;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 function appendEventsData(array &$twigData)
@@ -39,10 +40,31 @@ function appendAdminData(array &$twigData)
     $twigData['admin'] = $admin;
 }
 
+function appendDepartmentList(array &$twigData)
+{
+    $dataManager = new DataManager(DataManager::DEPARTMENT);
+    $twigData['departments'] = $dataManager->getArrayData();
+}
+
+function appendEventTypeList(array &$twigData)
+{
+    $dataManager = new DataManager(DataManager::EVENT_TYPE);
+    $twigData['eventTypes'] = $dataManager->getArrayData();
+}
+
+function appendAdminList(array &$twigData)
+{
+    $dataManager = new DataManager(DataManager::ADMIN);
+    $twigData['admins'] = $dataManager->getArrayData();
+}
+
 function redirectIfLoggedIN(Session $session)
 {
-    if ($session->isUserLoggedIn() || $session->isAdminLoggedIn()) {
+    if ($session->isUserLoggedIn()) {
         EasyHeaders::redirect('/?user-logged-in');
+    }
+    if ($session->isAdminLoggedIn()) {
+        EasyHeaders::redirect('/admin/dashboard');
     }
 }
 
@@ -55,6 +77,16 @@ function addTwigCustomFunctions(Environment &$twig)
         return EventRegistration::isUserRegistered($eventID, $userID);
     });
     $twig->addFunction($checkRegTwigFunction);
+}
+
+function addTwigCustomFilters(Environment &$twig)
+{
+    $firstWordFilter = new TwigFilter('first_word', function ($string) {
+        $words = explode(' ', trim($string));
+        return $words[0];
+    });
+
+    $twig->addFilter($firstWordFilter);
 }
 
 function getAcronym(string $string): string

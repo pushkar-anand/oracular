@@ -1,0 +1,45 @@
+<div id="add-admin" class="modal">
+    <form method="post" action="/admin/new">
+        <div class="modal-content">
+            <h4>Add Admin</h4>
+            <p>Add a new admin</p><br/>
+            <div class="input-field">
+                <input placeholder="Admin Name" id="admin-name" name="admin-name" type="text" class="validate"
+                       required>
+                <label for="admin-name">Admin Name</label>
+            </div>
+            <div class="input-field">
+                <input placeholder="Admin Email" id="admin-email" name="admin-email" type="email"
+                       class="validate" required>
+                <label for="admin-email">Admin Email</label>
+            </div>
+            <div class="input-field">
+                <input placeholder="Admin Password" id="admin-pass" name="admin-pass" type="password"
+                       class="validate" required>
+                <label for="admin-pass">Admin Password</label>
+            </div>
+            <div class="input-field">
+                <select id="dept" required name="admin-dept">
+                    <option value="" disabled selected>Department</option>
+                    {% for department in departments %}
+                        <option value="{{ department.deptID }}">{{ department.deptName|raw }}</option>
+                    {% endfor %}
+                </select>
+                <label for="dept">Admin Department</label>
+            </div>
+            <div class="input-field col s12">
+                <select id="level" required name="admin-level">
+                    <option value="" disabled selected>Admin Level</option>
+                    <option value="low">LOW</option>
+                    <option value="mid">MID</option>
+                    <option value="super">SUPER</option>
+                </select>
+                <label for="level">Admin Level</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-close waves-effect waves-green btn-flat">dismiss</a>
+            <button class="btn" type="submit">Add</button>
+        </div>
+    </form>
+</div>
