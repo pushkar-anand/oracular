@@ -330,7 +330,7 @@ try {
         if (isset($_POST['dept-name'])) {
             $deptName = Functions::escapeInput($_POST['dept-name']);
             $department = new Department();
-            $department->add($deptName, getAcronym($deptName));
+            $department->add($deptName, getKey($deptName));
             EasyHeaders::redirect('/admin/dashboard');
         }
     });

@@ -70,3 +70,10 @@ function getAcronym(string $string): string
     return strtoupper($acronym);
 }
 
+function getKey(string $string): string
+{
+    $string = strtolower($string);
+    return str_replace(' ', '-', $string);
+}
+
+
