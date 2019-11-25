@@ -164,4 +164,27 @@ class Event
         return EventRegistration::isUserRegistered($this->eventID, $userID);
     }
 
+    public function update()
+    {
+        $null = NULL;
+        $query = 'UPDATE ' . self::EVENTS_TABLE_NAME . ' SET ' .
+            self::EVENT_NAME_FIELD . ' = ?,' .
+            self::EVENT_DESC_FIELD . ' = ?,' .
+            self::EVENT_TYPE_FIELD . ' = ?,' .
+            self::EVENT_START_TIME_FIELD . ' = ?,' .
+            self::EVENT_END_TIME_FIELD . ' = ?,' .
+            self::EVENT_VENUE_FIELD . ' = ?,' .
+            self::EVENT_IMG_FIELD . ' = ?' .
+            ' WHERE ' . self::EVENT_ID_FIELD . ' = ? ';
+
+        $this->logger->pushToDebug("Update Query: $query");
+        $stmt = $this->oracularDB->dbConnection->getConn()->prepare($query);
+        $stmt->bind_param('ssisssbi',
+            $this->eventName, $this->eventDesc, $this->eventType, $this->eventStartTime, $this->eventEndTime, $this->eventVenue, $null, $this->eventID);
+        $stmt->send_long_data(6, $this->eventIMG);
+        if ($stmt->execute() === false) {
+            $this->logger->pushToError($stmt->error);
+        }
+    }
+
 }

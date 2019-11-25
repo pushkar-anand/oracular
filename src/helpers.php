@@ -8,6 +8,7 @@ use OracularApp\EventRegistration;
 use OracularApp\Session;
 use OracularApp\User;
 use PhpUseful\EasyHeaders;
+use PhpUseful\Functions;
 use Twig\Environment;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -86,7 +87,18 @@ function addTwigCustomFilters(Environment &$twig)
         return $words[0];
     });
 
+    $dateFilterForForm = new TwigFilter('as_date_input', function ($string) {
+        $time = strtotime($string);
+        return date('M d, Y', $time);
+    });
+    $timeFilterForForm = new TwigFilter('as_time_input', function ($string) {
+        $time = strtotime($string);
+        return date('h:i A', $time);
+    });
+
     $twig->addFilter($firstWordFilter);
+    $twig->addFilter($dateFilterForForm);
+    $twig->addFilter($timeFilterForForm);
 }
 
 function getAcronym(string $string): string
@@ -112,6 +124,22 @@ function appendEventRegisteredUsers(&$twigData)
 {
     $reg_users = EventRegistration::getAllRegisteredUsers($twigData['event']->eventID);
     $twigData['registered_users'] = $reg_users;
+}
+
+function updateVarIfChanged(&$variable, $newData)
+{
+    $variable = ($variable === $newData) ? $variable : $newData;
+}
+
+function getTimestampUNIX(string $date, string $time): string
+{
+    $timeStr = Functions::escapeInput($date) . ' ' . Functions::escapeInput($time);
+    return strtotime($timeStr);
+}
+
+function getTimestampMYSQL($time): string
+{
+    return date('Y-m-d H:i:s', $time);
 }
 
 

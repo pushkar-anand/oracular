@@ -1,0 +1,167 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}
+    Edit :: {{ event.eventName }}
+{% endblock title %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="section form-wrapper">
+        {#        <div class="container">#}
+        <form class="form" method="post" id="event-form" action="/event/edit" enctype="multipart/form-data">
+            <div class="card">
+                <div class="card-content">
+
+                    <span class="card-title">Edit: {{ event.eventName }}</span>
+                    <input type="hidden" name="event-id" value="{{ event.eventID }}"/>
+                    <div class="input-field">
+                        <input type="text" name="event-name" required
+                               class="validate {% if error.eventName %} {{ "invalid" }} {% endif %}"
+                               id="event-name" value="{{ event.eventName }}"/>
+                        <label for="event-name">Event Name</label>
+                        {% if error.eventName %}
+                            <span class="helper-text" data-error="{{ error.eventName }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event name."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <select id="event-type" required name="event-type">
+                            <option value="" disabled>Event Type</option>
+                            {% for eventType in eventTypes %}
+                                <option value="{{ eventType.eventTypeID }}" {% if eventType.eventTypeID == event.eventType %} selected {% endif %}>{{ eventType.eventTypeName }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="event-type">Event Type</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-start-date" required
+                               class="datepicker validate {% if error.eventStartDate %} {{ "invalid" }} {% endif %}"
+                               id="event-start-date" value="{{ event.eventStartTime|as_date_input }}"/>
+                        <label for="event-start-date">Event Start Date</label>
+                        {% if error.eventStartDate %}
+                            <span class="helper-text" data-error="{{ error.eventStartDate }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event date."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-start-time" required
+                               class="timepicker validate {% if error.eventStartTime %} {{ "invalid" }} {% endif %}"
+                               id="event-start-time" value="{{ event.eventStartTime|as_time_input }}"/>
+                        <label for="event-start-time">Event Start Time</label>
+                        {% if error.eventStartTime %}
+                            <span class="helper-text" data-error="{{ error.eventStartTime }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event time."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-end-date" required
+                               class="datepicker validate {% if error.eventEndDate %} {{ "invalid" }} {% endif %}"
+                               id="event-end-date" value="{{ event.eventEndTime|as_date_input }}"/>
+                        <label for="event-end-date">Event End Date</label>
+                        {% if error.eventEndDate %}
+                            <span class="helper-text" data-error="{{ error.eventEndDate }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event date."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <input type="text" name="event-end-time" required
+                               class="timepicker validate {% if error.eventEndTime %} {{ "invalid" }} {% endif %}"
+                               id="event-end-time" value="{{ event.eventEndTime|as_time_input }}"/>
+                        <label for="event-end-time">Event End Time</label>
+                        {% if error.eventEndTime %}
+                            <span class="helper-text" data-error="{{ error.eventEndTime }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event time."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field">
+                        <input type="text" name="event-venue" required
+                               class="validate {% if error.eventVenue %} {{ "invalid" }} {% endif %}"
+                               id="event-venue" value="{{ event.eventVenue }}"/>
+                        <label for="event-venue">Event Venue</label>
+                        {% if error.eventVenue %}
+                            <span class="helper-text" data-error="{{ error.eventVenue }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event venue."></span>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-field col s12">
+                        <textarea id="event-desc" class="materialize-textarea"
+                                  name="event-desc">{{ event.eventDesc }}</textarea>
+                        <label for="event-desc">Event Description</label>
+                    </div>
+
+                    <div class="img-preview-wrapper" id="event-img-preview">
+                        <p>Current Event Image: </p>
+                        <p style="text-align: end"><a href="#" id="change-img-click">Change</a></p>
+                        <img class="responsive-img" src="data:image/jpeg;base64,{{ event.eventIMG }}"
+                             alt="Event Image"/>
+                    </div>
+
+                    <div class="input-field col s12" id="img-upload" style="display:none">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>Select new image</span>
+                                <input type="file" name="event-img" accept="image/*"/>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        {% if error.eventIMG %}
+                            <span class="helper-text" data-error="{{ error.eventIMG }}"></span>
+                        {% else %}
+                            <span class="helper-text" data-error="Invalid event image."></span>
+                        {% endif %}
+                    </div>
+
+
+                    <br/>
+                    <div class="right-align">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {#        </div>#}
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script>
+        $(document).ready(() => {
+            $('select').formSelect();
+            $('.datepicker').datepicker({
+                minDate: new Date((new Date()).getTime() + (60 * 60 * 24 * 1000))
+            });
+            $('.timepicker').timepicker();
+
+            $('#change-img-click').click((e) => {
+                e.preventDefault();
+                $('#img-upload').show();
+                $('#event-img-preview').hide();
+            });
+        });
+    </script>
+{% endblock %}

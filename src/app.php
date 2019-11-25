@@ -200,11 +200,79 @@ try {
     });
 
     $router->addMatch('GET', '/event/edit', function () use ($twig, $session, $logger) {
-
+        if ($session->isAdminLoggedIn() === false && !isset($_GET['id'])) {
+            EasyHeaders::redirect('/');
+        }
+        $eventID = Functions::escapeInput($_GET['id']);
+        $event = new Event($eventID);
+        $adminID = $_SESSION[Session::SESSION_ADMIN];
+        if (!$session->isSuperAdmin() || $event->createdBy !== $adminID) {
+            EasyHeaders::redirect('/');
+        }
+        $twigData = array();
+        $twigData['event'] = $event;
+        $dataManager = new DataManager(DataManager::EVENT_TYPE);
+        $twigData['eventTypes'] = $dataManager->getArrayData();
+        echo $twig->render('event.edit.twig', $twigData);
     });
 
     $router->addMatch('POST', '/event/edit', function () use ($twig, $session, $logger) {
+        $twigData = array();
+        $error = array();
+        if ($session->isAdminLoggedIn() === false) {
+            EasyHeaders::redirect('/');
+        }
+        if (
+            isset($_POST['event-id']) &&
+            isset($_POST['event-name']) &&
+            isset($_POST['event-type']) &&
+            isset($_POST['event-start-date']) &&
+            isset($_POST['event-start-time']) &&
+            isset($_POST['event-end-date']) &&
+            isset($_POST['event-end-time']) &&
+            isset($_POST['event-venue']) &&
+            isset($_POST['event-desc'])) {
 
+            $eventID = Functions::escapeInput($_POST['event-id']);
+            $event = new Event($eventID);
+
+            $adminID = $_SESSION[Session::SESSION_ADMIN];
+            if (!$session->isSuperAdmin() || $event->createdBy !== $adminID) {
+                EasyHeaders::redirect('/');
+            }
+
+            $startTimestamp = getTimestampUNIX($_POST['event-start-date'], $_POST['event-start-time']);
+            $endTimeStamp = getTimestampUNIX($_POST['event-end-date'], $_POST['event-end-time']);
+
+            if ($endTimeStamp <= $startTimestamp) {
+                $error['eventEndDate'] = 'Event end cannot be less or equal to event start.';
+                $error['eventEndTime'] = 'Event end cannot be less or equal to event start.';
+            }
+
+            if (count($error) === 0) {
+                updateVarIfChanged($event->eventName, Functions::escapeInput($_POST['event-name']));
+                updateVarIfChanged($event->eventType, Functions::escapeInput($_POST['event-type']));
+                updateVarIfChanged($event->eventVenue, Functions::escapeInput($_POST['event-venue']));
+                updateVarIfChanged($event->eventDesc, Functions::escapeInput($_POST['event-desc']));
+                updateVarIfChanged($event->eventStartTime, getTimestampMYSQL($startTimestamp));
+                updateVarIfChanged($event->eventEndTime, getTimestampMYSQL($endTimeStamp));
+
+                if (isset($_FILES['event-img']) && is_uploaded_file($_FILES['event-img']['tmp_name'])) {
+                    $eventIMG = new EventImageHelper($_FILES['event-img']);
+                    updateVarIfChanged($event->eventIMG, $eventIMG->getImageBlob());
+                    $logger->pushToDebug('User uploaded image.');
+                } else {
+                    $event->eventIMG = base64_decode($event->eventIMG);
+                }
+                $event->update();
+                EasyHeaders::redirect("/event/details?event={$event->eventName}&id={$eventID}");
+            }
+        }
+        $twigData['error'] = $error;
+        $twigData['adminLoggedIN'] = true;
+        $dataManager = new DataManager(DataManager::EVENT_TYPE);
+        $twigData['eventTypes'] = $dataManager->getArrayData();
+        echo $twig->render('event.edit.twig', $twigData);
     });
 
     $router->addMatch('GET', '/event/new', function () use ($twig, $session) {
@@ -239,11 +307,8 @@ try {
             isset($_POST['event-desc']) &&
             isset($_FILES['event-img'])) {
 
-            $startDateTimeStr = Functions::escapeInput($_POST['event-start-date']) . ' ' . Functions::escapeInput($_POST['event-start-time']);
-            $startTimestamp = strtotime($startDateTimeStr);
-
-            $endDateTimeStr = Functions::escapeInput($_POST['event-end-date']) . ' ' . Functions::escapeInput($_POST['event-end-time']);
-            $endTimeStamp = strtotime($endDateTimeStr);
+            $startTimestamp = getTimestampUNIX($_POST['event-start-date'], $_POST['event-start-time']);
+            $endTimeStamp = getTimestampUNIX($_POST['event-end-date'], $_POST['event-end-time']);
 
             if ($endTimeStamp <= $startTimestamp) {
                 $error['eventEndDate'] = 'Event end cannot be less or equal to event start.';
@@ -251,8 +316,8 @@ try {
             }
             $eventName = Functions::escapeInput($_POST['event-name']);
             $eventType = Functions::escapeInput($_POST['event-type']);
-            $startDateTime = date('Y-m-d H:i:s', $startTimestamp);
-            $endDateTime = date('Y-m-d H:i:s', $endTimeStamp);
+            $startDateTime = getTimestampMYSQL($startTimestamp);
+            $endDateTime = getTimestampMYSQL($endTimeStamp);
             $eventVenue = Functions::escapeInput($_POST['event-venue']);
             $eventDesc = Functions::escapeInput($_POST['event-desc']);
             $eventImg = new EventImageHelper($_FILES['event-img']);
