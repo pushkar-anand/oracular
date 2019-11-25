@@ -161,6 +161,10 @@ try {
         echo $twig->render('event.detail.twig', $twigData);
     });
 
+    $router->addMatch('GET', '/event/details/registrations', function () use ($twig, $session, $twig) {
+
+    });
+
     $router->addMatch('GET', '/event/register', function () use ($twig, $session, $logger) {
         if ($session->isUserLoggedIn() === false) {
             EasyHeaders::redirect('/login');
@@ -179,6 +183,14 @@ try {
             }
         }
         EasyHeaders::redirect('/');
+    });
+
+    $router->addMatch('GET', '/event/edit', function () use ($twig, $session, $logger) {
+
+    });
+
+    $router->addMatch('POST', '/event/edit', function () use ($twig, $session, $logger) {
+
     });
 
     $router->addMatch('GET', '/event/new', function () use ($twig, $session) {

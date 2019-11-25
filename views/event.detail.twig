@@ -28,12 +28,26 @@
                     <p><span class="title">Starts: </span> {{ event.eventHumanReadableStartTime }} </p>
                     <p><span class="title">Ends: </span> {{ event.eventHumanReadableEndTime }} </p>
 
-                    {% if not userRegisteredForEvent(event.eventID, user.userID) %}
-                        <a class="btn" href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}"
-                           class="event-register">Register</a>
+                    {% if not adminLoggedIN %}
+                        {% if not userRegisteredForEvent(event.eventID, user.userID) %}
+                            <a class="btn" href="/event/register?event={{ event.eventName }}&id={{ event.eventID }}"
+                               class="event-register">Register</a>
+                        {% else %}
+                            <a class="event-registered">Registered</a>
+                        {% endif %}
                     {% else %}
-                        <a class="event-registered">Registered</a>
+                        {% if admin.adminID == event.createdBy or admin.adminLevel == "super" %}
+                            <a class="btn" href="/event/edit/?event={{ event.eventName }}&id={{ event.eventID }}">
+                                Edit
+                            </a>
+
+                            <a class="btn"
+                               href="/event/details/registrations?event={{ event.eventName }}&id={{ event.eventID }}">
+                                Registrations
+                            </a>
+                        {% endif %}
                     {% endif %}
+
                 </div>
             </div>
         </div>
