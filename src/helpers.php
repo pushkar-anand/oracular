@@ -33,12 +33,14 @@ function appendUserData(array &$twigData)
 {
     $user = new User($_SESSION[Session::SESSION_USER]);
     $twigData['user'] = $user;
+    $twigData['userLoggedIN'] = true;
 }
 
 function appendAdminData(array &$twigData)
 {
     $admin = new Admin($_SESSION[Session::SESSION_ADMIN]);
     $twigData['admin'] = $admin;
+    $twigData['adminLoggedIN'] = true;
 }
 
 function appendDepartmentList(array &$twigData)
