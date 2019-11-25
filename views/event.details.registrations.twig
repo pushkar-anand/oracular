@@ -1,0 +1,67 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}
+    {{ event.eventName }} :: Registrations
+{% endblock title %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h1>Registrations: {{ event.eventName }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6 m3">
+                <span class="title">Total:</span> {{ registered_users|length }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <table class="responsive-table striped highlight centered">
+                    <thead>
+                    <tr>
+                        <th>S. No</th>
+                        <th>Name</th>
+                        <th>USN</th>
+                        <th>Branch</th>
+                        <th>Semester</th>
+                        <th>Section</th>
+                        <th>College</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in registered_users %}
+                        <tr>
+                            <td>{{ loop.index }}.</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.usn }}</td>
+                            <td>{{ user.departmentOBJ.deptShortName }}</td>
+                            <td>{{ user.semester }}</td>
+                            <td>{{ user.section }}</td>
+                            <td>{{ user.college }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script>
+        $(document).ready(() => {
+
+        });
+    </script>
+{% endblock %}

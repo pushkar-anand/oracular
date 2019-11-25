@@ -125,5 +125,20 @@ class EventRegistration
         return ($stmt->num_rows != 0);
     }
 
+    /**
+     * @param int $eventID
+     * @return array
+     */
+    public static function getAllRegisteredUsers(int $eventID): array
+    {
+        $users = array();
+        $results = OracularDB::getDB()->dbConnection->fetchAllMatchingRows(self::EVENTS_REG_TABLE_NAME, self::EVENT_ID_FIELD, $eventID);
+        foreach ($results as $result) {
+            $user = new User($result[self::USER_ID_FIELD]);
+            $users[] = $user;
+        }
+        return $users;
+    }
+
 
 }

@@ -108,4 +108,10 @@ function getKey(string $string): string
     return str_replace(' ', '-', $string);
 }
 
+function appendEventRegisteredUsers(&$twigData)
+{
+    $reg_users = EventRegistration::getAllRegisteredUsers($twigData['event']->eventID);
+    $twigData['registered_users'] = $reg_users;
+}
+
 

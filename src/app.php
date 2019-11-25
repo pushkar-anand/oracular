@@ -161,8 +161,22 @@ try {
         echo $twig->render('event.detail.twig', $twigData);
     });
 
-    $router->addMatch('GET', '/event/details/registrations', function () use ($twig, $session, $twig) {
+    $router->addMatch('GET', '/event/details/registrations', function () use ($twig, $session, $logger) {
+        $twigData = array();
+        if ($session->isAdminLoggedIn() === false && !isset($_GET['id'])) {
+            EasyHeaders::redirect('/');
+        }
+        $eventID = Functions::escapeInput($_GET['id']);
+        $event = new Event($eventID);
 
+        $adminID = $_SESSION[Session::SESSION_ADMIN];
+        if (!$session->isSuperAdmin() || $event->createdBy !== $adminID) {
+            EasyHeaders::redirect('/');
+        }
+        $twigData['event'] = $event;
+        appendEventRegisteredUsers($twigData);
+        $twigData['adminLoggedIN'] = true;
+        echo $twig->render('event.details.registrations.twig', $twigData);
     });
 
     $router->addMatch('GET', '/event/register', function () use ($twig, $session, $logger) {
