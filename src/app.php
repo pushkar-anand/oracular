@@ -325,24 +325,24 @@ try {
             $eventDept = $twigData['admin']->adminDept;
             $eventOwner = $_SESSION[Session::SESSION_ADMIN];
 
-            try {
-                $event = new Event();
-                $event->newEvent(
-                    $eventName,
-                    $eventDesc,
-                    $eventType,
-                    $startDateTime,
-                    $endDateTime,
-                    $eventDept,
-                    $eventVenue,
-                    $eventImg->getImageBlob(),
-                    $eventOwner
-                );
-            } catch (Exception $e) {
-                $logger->pushToError($e);
+            if (count($error) === 0) {
+                try {
+                    $event = new Event();
+                    $event->newEvent(
+                        $eventName,
+                        $eventDesc,
+                        $eventType,
+                        $startDateTime,
+                        $endDateTime,
+                        $eventDept,
+                        $eventVenue,
+                        $eventImg->getImageBlob(),
+                        $eventOwner
+                    );
+                } catch (Exception $e) {
+                    $logger->pushToError($e);
+                }
             }
-
-
         } else {
             $error['error'] = 'Fill all the fields.';
         }
