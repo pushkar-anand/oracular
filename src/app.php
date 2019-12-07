@@ -339,6 +339,7 @@ try {
                         $eventImg->getImageBlob(),
                         $eventOwner
                     );
+                    EasyHeaders::redirect('/');
                 } catch (Exception $e) {
                     $logger->pushToError($e);
                 }
